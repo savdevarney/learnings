@@ -1,0 +1,192 @@
+// Notes from Wes Bos Reach tutorial videos
+// VOLUME 1
+
+
+01 INTRODUCTION, Tooling and Editor Setup
+
+things you need to get started 
+- nodeJS - all the tooling we use to work with react is in node
+- react devtools (chrome plugin)
+- babel-sublime - package control (JavaScript-babel)
+- console (HyperTerm)
+
+module bundler
+- rather than popping in a script tag for each dependencies
+- import all the dependencies that you may need
+- module bundler takes all your modules and puts them in one bundler
+- WebPack to bundle all the JS
+- CreateReactApp simplifies the tooling you need to get running ... uses WebPack behding the scene
+- package.json will have 
+
+1. in terminal: npm install --> adds node_modules
+2. in terminal: npm start --> start CreateReact app to bundle JS and fire up a server for us that auto-reloads.  
+
+This package has installed:
+    •   Node.js v8.9.1 to /usr/local/bin/node
+    •   npm v5.5.1 to /usr/local/bin/npm
+Make sure that /usr/local/bin is in your $PATH.
+
+
+COMPONENTS
+- Everything in React is a component
+- Reusable piece of your website
+- Allows you to build your own tags/components and supply them information
+
+Benefits
+- if you have someone on your team that's working on 1 component, can give them that one module / file
+- reusable code
+
+In demo: 
+
+components: 
+- app (parent component)
+	- state
+	- props
+	- context
+- fish
+- order
+- inventory
+
+*** Changing data elements in STATE changes them throughout
+
+
+
+ 
+
+CREATING COMPONENTS
+
+Store Picker Component
+
+ES Lint - a Linter that smacks your hand when you do things that aren't in the best interest in writing good React code.  
+
+- any code written in index.js is bundled into bundle.js file
+
+- best practice to put all of components in one file. 
+
+
+
+
+
+WRITING HTML WITH JSX
+
+- can't write 'class' as it's a reserved word, so instead, attribute is named 'className'
+- can only ever return ONE parent element.
+		can't have <form></form><p></p>
+
+- HAVE to close tags (esp important with self closing tags)
+- comments need to be in the parent element that you are returning within
+- Comments ... if you want to comment in JSX ... 
+
+ { /* comment */ }
+
+
+
+LOADING CSS INTO REACT APPS
+
+1. in index.html, add a link in head <link rel='stylesheet' href='style.css'>
+2. load in css and let webpack do the rest. 
+
+		a. use this file --> css / style.css
+		b. in index.js 'ipmore './css/style.css';
+
+APP LAYOUT
+
+PASSING DYNAMIC DATA WITH PROPS
+
+- HTML attributes: Ways you can supply additional info to the tag
+- React props the way to pass info to a React component
+- For ex, the App component is creating an instance of Header componenet and in the render function, we're setting named attributes and that is then available to Header.
+- In Header, to access the information inside of it - we use Props
+
+- to put variables into JSX, 
+
+this: refers to the componenet
+props: an object avaialble to us
+tagline: attribute in object
+
+console.log(this) in componenet and you can see props
+
+$r in console after selecting the componenet you want .... 
+$0 gives you current element
+
+proptypes: help you validate that 1. data was passed and 2. that the passed data is the right type. 
+
+
+
+STATELESS FUNCTIONAL COMPONENTS
+
+- when it's a simple componenet and it's JUST rendering HTML to the DOM ( just need render ) ... just use a stateless functional component
+
+
+ROUTING WITH REACT ROUTER
+- when you go to a URL ... what's rendered? That's mostly it. 
+- React Router is not part of React but is the industry standard (v 4)
+		- allows you to show/hide components depending on what page you're on. 
+		- create them in index.js
+		- router is just another componeent. 
+
+
+HELPER FUNCTIONS & UTILITY FUNCTIONS
+
+- helper.js ... functions that aren't big enough to be a module but things to use throughout the app.
+
+
+EVENTS IN REACT
+
+- only diff is that they're wrapped in a cross browser wrapper called SyntheticEvent
+- events are done inline (vs in script which is normally separated from HTML)
+
+- in case when you need to get data out of an input
+		- try to stay away from touching the DOM itself
+		- just modify the data, modify the JSX and let React handle the DOM
+
+ref
+	- string ref (being phased out)
+	- function ref (more complicated, but more useful)
+
+JSX attribute:
+<input type="text" required placeholder="Store Name" defaultValue={getFunName(this.getFunName)} ref={(input) => {this.storeInput = input}} />
+
+# this part: this.storeInput = input --> setting storeInput attribute on object === a reference to the DOM element itself (input)
+
+HTML rendering / DOM element
+<input type="text" required placeholder="Store Name" value="lazy-glamorous-cacti">
+
+$r --> StorePicker object
+$r.storeInput --> DOM element
+
+constructor = code that runs in instantiation. 
+
+
+REACT ROUTER 
+
+2 main ways to change the page
+
+everything you want to do is done through a componenet
+
+1. <Redirect /> navigates to a new location and adds the previous location onto the next location state. 
+2. imperative API .. alternative
+
+<BrowserRouter> is the parent for absolutely everything, so it's possible to surface it to the component you want.  Do this with Context in Raect.
+
+99% of the time you use State to hold data or Props to pass data down to a child.  But there's also context, which allows you to declare something at a top level and it can be made to everyone at a lower level.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
