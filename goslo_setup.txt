@@ -1,0 +1,11 @@
+Notes: GoSlo, first React app
+
+Setting up with create-react-app:
+- $ npm install -g create-react-app
+- $ create-react-app goslo
+
+commands available: 
+- $ npm start: starts the dev server
+- % npm run build: bundles the app into static files for prod
+- $ npm test: starts the test runner
+- $ npm run eject: removes tool and copies build dependencies, config files and scripts into the app dir
