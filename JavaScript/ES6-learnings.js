@@ -189,6 +189,54 @@ const html = sanitize`
 	<p>$<aboutMe?</p>
 `;
 
+// NEW STRING METHODS
+
+/*
+
+four new methods for readability and reduce the need for using regex
+
+*/
+
+const course = 'RFB2';
+const flightNumber= '20-AC2018-jz';
+const accountNumber = '825242631RT0001';
+// could be RT, RP, RC, etc. for Tax, Corporate Tax, Payroll
+
+const make = 'BMW';
+const model = 'x5';
+const colour = 'Royal Blue';
+
+// .startsWith()
+course.startsWith('RFB') // true
+course.startsWith('rfb') // false
+flightNumber.startsWith('AC') // false
+flightNumber.startsWith('AC', 3) // true
+
+// .endsWith()
+flightNumber.endsWith('jz') // true
+accountNumber.endsWith('RT', 11) // true (just take the first 11 numbers, ignore rest
+
+// .includes()
+flightNumber.includes('AC') // true
+flightNumber.includes('ac') // false, case insensitive
+
+// .repeat()
+// left pad function: 
+
+function leftPad(str, length=20) {
+	return `-> ${' '.repeat(length - str.length)}`
+}
+
+// will all be perfectly right aligned:
+
+console.log(leftPad(make));
+console.log(leftPad(model));
+console.log(leftPad(colour));
+
+
+
+
+
 
 
 
