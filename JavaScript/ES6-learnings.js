@@ -170,6 +170,27 @@ document.body.innerHTML = sentence;
 
 // SANITIZING USER DATA WITH TAGGED TEMPLATES
 
+/* 
+- sanitizing data before putting it in the dom. 
+- must make sure the user isn't doing anything sneaky and trying to do a xss, inserting an image, etc'
+- use a sanitizer library called dompurify
+*/
+
+function sanitize(strings, ...values) {
+	const dirty = strings.reduce((prev, next, i) => `${prev}${next}${values[i] || ''}`, '');
+	return DOMPurify.sanitize(dirty);
+}
+
+const first = 'Wes';
+const aboutMe = `I love to do evil <img src="http://unsplash.it/100/100?random" onload="alert('you got hacked');" />`;
+
+const html = sanitize`
+	<h3> ${first}<h3>
+	<p>$<aboutMe?</p>
+`;
+
+
+
 
 
 
