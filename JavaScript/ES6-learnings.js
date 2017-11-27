@@ -284,6 +284,35 @@ const { w: width = 400, h: height = 500 } = { w: 800 }
 // destructuring h from object on left and naming it height, but it's not there so it's setting height to it's default - 500
 
 
+// DESTRUCTURING ARRAYS
+
+const details = ['Wes Bos', 123, 'wesbox.com'];
+
+// const name = details[0]
+
+const [ name, id, website ] = details;
+
+// also works well w/ comma separated string
+
+const data = 'Basketball,Sports,90210,23';
+
+const [ itemName, category, sku, inventory ] = data.split(',');
+
+// what if destructure something that's not the same length? It just throws the same one out. 
+
+const team = ['Wes', 'Harry', 'Sarah', 'Keegan', 'Riker'];
+
+const [captain, assistant, ...players ] = team;
+
+// using the rest operator, we can assign players to items at indices 2+
+
+
+
+
+
+
+
+
 
 
 
