@@ -234,7 +234,54 @@ console.log(leftPad(model));
 console.log(leftPad(colour));
 
 
+// DESTRUCTURING OBJECTS
 
+// allows us to extra properties from JS objects or items from an array into their own values at the same time. 
+
+const person = {
+	first: 'Wes', 
+	last: 'Bos', 
+	country: 'Canada',
+	city: 'Hamilton',
+	links: {
+		social: {
+			twitter: 'twitter-url',
+			facebook: 'facebook-url',
+		}
+	}
+}
+
+// create two top level variables inside of the scobe
+const { first, last } = person; // when data wasn't nested... 
+
+// with nested data
+
+const: { twitter, facebook } = wes.links.social
+
+// renaming variables as you're destructuring:
+
+const {twitter:tweet, facebook:fb } = wes.links.social
+
+// setting defaults
+
+// also a req for height and fontsize but they're not in our obj
+
+const settings = {
+	width: 300, 
+	color: 'black'
+}
+
+const { width, height, color, fontSize } = settings; // width and height will be undefined
+
+const { width=100, height=100, color='blue', fontSize=25 } = settings; 
+// importantly, defaults will ONLY be used if they're not in the object!
+// useful when we pass a settings object to a function. 
+
+const { w: width = 400, h: height = 500 } = { w: 800 }
+
+// variables that are created are width and height
+// destructuring w from object on left and naming it width, with a value of 800 bec it's available
+// destructuring h from object on left and naming it height, but it's not there so it's setting height to it's default - 500
 
 
 
