@@ -306,6 +306,127 @@ const [captain, assistant, ...players ] = team;
 
 // using the rest operator, we can assign players to items at indices 2+
 
+// SWAPPING VARIABLES WITH DESTRUCTURING
+
+let inRing = 'Hulk Hogan';
+let onSide = 'The Rock';
+
+// old way to swap ... using tmp variable 
+
+[ inRing, onSide ] = [ onSide, inRing ];
+
+// DESTRUCTURING FUNCTIONS - MULTIPLE RETURNS AND NAMED DEFAULTS
+
+function convertCurrencty(amount) {
+
+	const converted = {
+		USD: amount * 0.76,
+		GPB: amount * 0.53, 
+		AUD: amount * 1.01,
+		MEX: amount * 13.30
+	}; 
+		return converted;
+	}
+
+const hundo = convertCurrency(100);
+
+hundo.aud // etc...
+
+// with destructuring can return multiple values from function (obj and then destructure the answer)
+
+const { USD, GPB, AUD, MEX } = convertCurrency(100); // and order doesn't matter
+
+// named functions - making them order independent!
+
+function tipCalc(total, tip=0.15, tax=0.13) { 
+
+}
+
+function tipCalc({ total, tip=0.15, tax=0.13 }) {
+	return total + (tip*total) + (tax*total);
+}
+
+const bill = tipCalc({ total: 200, tip: 0.20}); // default tax will kick in
+
+function tipCalc({total=100, tip-0.15, tax=0.13} = {}) {} // if nothing is passed in
+
+
+
+// FOR OF LOOPS
+
+cuts.forEach((cut) => {
+	console.log(cut);
+});
+
+// FOR IN LOOPS
+
+for (const index in cuts) {
+	console.log(cuts[index]); // gives us the index
+}
+
+
+// downsides: can't break out of loop in certain conditions, also can't continue or skip
+
+// FOR OF LOOP and destructuring with iterators
+
+const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'] ;
+cuts.entries() // an array iterator that returns [[0, 'Chuck'], [1, 'Brisket'] ... ]
+
+for (const cut of cuts) {
+	console.log(cut);
+}
+
+for (const cut of cuts.entries()) {
+
+}
+
+for (const [i, cut] of cuts.entries()) {
+	console.log(`${cut} is the ${i+1} item`)
+}
+
+
+function addUpNumbers() {
+	let total = 0;
+	for (const num of arguments) {
+		total += num;
+	}
+	return total;
+}
+
+addUpNumbers(10, 23, 52, 34, 12, 13, 123); // don't know how many numbers
+arguments // arrayish type of thing that provides all the args that got passed in. it has .length and a Symbol.iterator
+
+// using for-of to iterate through a string
+
+const name = 'Wes Bos';
+for (const char of name) {
+
+}
+
+// loop over dom collections w/o having to convert to a true array
+
+cost paras = document.querySelectorAll('p');
+console.log(ps);
+
+for (const paragraph of ps) {
+	paragraph.addEventListener('click', function() {
+		console.log(this.textContent);
+	})
+}
+
+// USING FOR IN WITH OBJECTS
+
+// objects aren't iterable ... 
+
+Object.entries() // ES7, so would need to pollyfill
+Object.keys() // array of all the keys and then would need to do Object[key] to get value
+
+for (const key in apple) {
+	const value = apple[key];
+	console.log(value, key);
+}
+
+
 
 
 
