@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>goslo: a breath backer and counter for your meditations</title>
+</head>
+<body>
+
+  <div class="counter">
+    <p>Click when you breathe in.</p>
+    <p>Click when you breathe out.</p>
+      
+    <br>
+    <p>total slo cycls: </p>
+    <div id='cycls'></div>
+  </div>
+    
+    <div class="interface">
+      <div class="circle">
+      </div>
+    </div>
+
+
+  <style>
+.counter {
+  position: relative;
+  text-align: center;
+  vertical-algn: center;
+  line-height: 100%;
+}
+
+.circle {
+  width: 1rem;
+  height: 1rem;
+  border: 5px solid gray;
+  border-radius: 50%;
+  margin: 50px auto;
+  position: relative;
+  padding: 2rem;
+}
+
+.expanding {
+  animation-name: expand;
+  animation-duration: 5s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+  animation-direction: forwards;
+  animation-iteration-count: 1;
+  animation-play-state: running;
+}
+
+.contracting {
+  animation-direction: reverse;
+}
+
+@keyframes expand {
+  from {
+    width: 1rem;
+    height: 1rem;
+  }
+  to {
+    width: 10rem;
+    height: 10rem;
+  }
+</style>
+
+<script>
+
+let cycls = 0;
+let clickCount = 0;
+
+let interface = document.querySelector(".interface");
+let circle = document.querySelector(".circle");
+
+function updateCycls() {
+  let cyclsDisplay  = document.querySelector('#cycls');
+  cyclsDisplay.innerHTML = cycls;
+};
+
+updateCycls()
+
+interface.addEventListener('click', function(){
+  clickCount +=1;
+  /// On the first click, add class to initalize animation
+  if (clickCount === 1) {
+    circle.classList.add('expanding');
+  }
+  // on every even click, play animation in reverse
+  if (clickCount % 2 === 0) {
+    circle.classList.add('contracting');
+  // on every odd click after first, remove reverse effect, update cycls
+  } else if (!(clickCount % 2 === 0) && (clickCount > 1)) {
+    circle.classList.remove('contracting')
+    cycls += 1;
+    updateCycls();
+  }
+});
+
+
+</script>
+</body>
+</html>

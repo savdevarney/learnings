@@ -1,0 +1,213 @@
+Notes on learnings from expanding circle mini-project
+
+Expanding Circle goals: 
+- make a circle expand/constrict on event
+- events: press/hold for expand and release for constrict, on desktop ... click/hold? 
+- 
+
+
+CSS animations: 
+two main ways: 
+1. transition property
+2. animation property + keyframes
+
+.element{
+    transitioin: [property] [duration] [ease] [delay];
+}
+
+property: the effect we're transitioning to (can be 'all')
+ease: timing function
+delay: how long should this wait before the transition starts happening
+
+ex:
+
+.element {
+    transition: opacity 300ms ease-in-out 1s;
+}
+
+- only opacity will get transitioned, over 300 ms, but wait until 1 sec has passed before the transition starts. 
+- can have multiple transitions, just define all 4 properties again and seperate with , before ending with a ;
+
+What CAN we animate? What can we NOT animate?
+
+font-size:
+background-color:
+width: 
+left: 
+
+more ... anything you can imagine changing you can animate.  But NOT things like display, font-family, position (like relative to absolute)
+
+what properties are the best to animate? these are the most performant:
+1. position (translate - x,y), 
+2. scale, 
+3. rotation, 
+4. opacity (can all be in the transform property)
+
+Only these can be done at a gurantee at 60 fps, they do not cause a repaint and a reflow of the layout which is costly in terms of browser rendering. 
+
+Triggering a transformation
+1. hover pseudo class
+2. class changes (the new class has the command/style to transition)
+
+EXAMPLE: 
+
+<div class="trigger">
+    <div class="box"></div>
+</div>
+
+
+body
+    padding: 50 px
+
+.trigger
+    width: 200px
+    height: 200px
+    border: 20px solid #999
+    background: #ddd
+
+.box
+    display: inline-block
+    background: pink
+    width: 200px
+    height: 200px
+    transition: transform 300ms ease-in-out
+    pointer-events: none
+
+.trigger:hover .box             
+    transform: translate(200px, 150px) rotate(20deg)
+
+.trigger.clicked .box
+    transform: translate(200px, 150px) rotate(20deg)
+
+- when trigger is hovered, take box (the child of trigger) and transform that
+- still have problem that hovering over box still triggers - to fix: 
+    pointer-events: none 
+- trigger with a class of clicked: .trigger.clicked .box
+
+- pointer-events: none super helpful when you need to make sure certain things don't trigger
+
+
+doing the same thing with classes / javascript
+
+$(.trigger).on('click', function() {
+    $(this).toggleClass('clicked')
+})
+}
+
+THIS WON'T WORK ... because the transition will only happen when there is a change in something
+$(.trigger).on('click', function() {
+    $(this).append('div class='box'>')
+})
+}
+
+There's a difference between transition and animation!!! 
+    
+Animation and Keyframes
+
+@keyfames [name] {
+    from {
+        [styles];
+    }
+    to {
+        [styles];
+    }
+}
+
+keyframes by themselves do not do anything! 
+
+example: 
+
+@keyframes myframes {
+    from{
+        height: 200px;
+        background: orange;
+    }
+    to {
+        height: 400 px;
+        background: pink;
+    }
+}
+
+
+EXAMPLE: 
+
+<div class='box'></div>
+
+.box
+    display: inline-block
+    background: pink
+    width: 200px
+    height: 200px
+    position: relative
+    animation myframes 2s ease-in-out 0s infinte
+
+@keyframes myframes
+    from {
+        height: 200px
+    }
+    to {
+        height: 600px
+        background: orange
+    }
+
+
+instead of from and to can use percentages!
+
+0%
+    height: 200px
+
+30%
+    width: 400px
+
+100%
+    height: 600px
+    background: orange
+
+
+grow/pause/grow in one animation:
+
+0%
+    height: 200px
+
+30%, 70% (nothing happens between 30% and 70%)
+    width: 400px
+
+100%
+    height: 600px
+
+
+
+
+.element{
+    animation: [name] [duration] [timing-function] [delay] [iteration-count] [direction] [fill-mode] [play-state];
+}
+
+example: 
+.element {
+    animation: myframes 2s ease-in-out 0s infinite normal forwards paused;
+}
+
+Notes on properties:
+- duration: 
+- timing-function: same as transition, etc
+- animation-delay: how long to wait after triggering before animation starts happening (if infinite - only before start)
+- iteration-count: a number / infinite ... 
+- animation-direction: can be reverse, or alternate!!!!
+- animation-fill-mode: what the element looks like after it stops. 'forwards': make it look like the last frame, 'backwareds', 'normal', 'inherit'
+- animation-play-state: 'running' or 'paused'
+
+
+example: adding this: 
+
+$('.box').on('click', function(){
+    $(this).toggleClass('is-paused');
+});
+
+&.is-paused
+    animation-play-state: paused;
+
+This will pause the animation on click.
+
+
+
+
