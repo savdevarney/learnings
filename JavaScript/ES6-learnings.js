@@ -426,7 +426,226 @@ for (const key in apple) {
 	console.log(value, key);
 }
 
+// ARRAY METHODS
 
+// .from() and .of() not on the prototype but on the array itself
+
+const people = document.querSelectorAll('.people p');
+const names = peoples.map( person => person.textContent); // wouldn't work because this is a node list! 
+Array.from(people);
+// OR
+const people = [...document.querySelectorAll('.people p')];
+
+// Array.from(nodeList, map function) ---> takes a second argument
+
+const peopleArray = Array.from(people, person => {
+	// each person is the dom node
+	return person.textContent;
+})
+
+// transforming arguments keyword
+
+
+function sumAll() {
+	const nums = Array.from(arguments);
+	return nums.reduce((prev, next) => prev + next), 0);
+}
+
+sumAll(2, 34, 25, 99)
+
+// Array.of()
+
+const ages = Array.of(12, 4, 5, 99, 87); // creates an array from everything you've passed it. 
+
+// Array.find() and Array.findIndex()
+
+let posts = [{}, {}, {}, {}] // want to find the entire object in the Array
+
+// loops over every object 
+
+const post = posts.find(post => {
+	if (post.code === 'desired'){
+		return True
+	}
+	return False
+})
+ 
+let code = 'desired_code';
+const post = posts.find(post => post.code === code);
+
+// WHERE is in the Array actually?
+
+const postIndex = posts.findIndex((post) => {
+	if(post.code === code) {
+		return true;
+	} else {
+		return false;
+	}
+})
+
+// which can be shortened to: 
+const postIndex = posts.findIndex(post => post.code === code);
+
+// Array.some() and Array.every()
+// checks data in an array to determine if some or all of items meet what you're looking for
+
+const ages = [32, 15, 19, 12];
+
+const adultPresent = ages.some(age => age >= 18); // returns True becuase at least 1 is present
+const allAdults = ages.every(age => age >= 18); // returns False becuase there is a 15 y.o.
+
+// SPREAD OPERATOR ... 
+
+// takes every single item from an iterable and spreads into a new iterable (anything you can loop over w/ a for of ... arrays, strings, dom nodes, arguments, maps, sets)
+
+const featured = ['Deep Dish', 'Peperoni', 'Hawaiian'];
+const specialty = ['Meatzza', 'spicy Mama', 'Margherita'];
+const pizas = featured.concat(specialty); // this will work, but what if we wanted to put 'vegetable pizza' in the middle
+
+const pizasSpread = [...featured, 'veg', ...specialty];
+
+[...'wes']; --> ['w', 'e', 's']
+
+// copy an array
+const fridayPizzas = pizzas; 
+// if we assign fridayPizzas[0] something else, it would also change pizzas. 
+// w/o spread:
+const fridayPizzas = [].concat(pizzas); // this creates a copy
+
+const fridayPizzas = [...pizzas]; // takes every item in pizzas and spreads them into the array
+
+
+const deepDish = {
+	pizzaName: 'Deep Dish', 
+	size: 'Medium', 
+	ingredients: ['Marinara', 'Italian Sausage', 'Dough', 'Cheese']
+}
+
+// want to create a new array off a property of an object
+
+const shoppingList = ['Milk', 'Flour', ...deepDish.ingredients];
+
+const comments = [
+{ id: 123, text: 'a'}, 
+{ id: 456, text: 'b'}, 
+{ id: 789, text: 'c'}
+]
+
+// need to remove an obj from an actual array
+
+const id = 789;
+
+const commentIndex = comments.findIndex( comment => comment.id === id );
+// previously had to slice everything before and after to delete, now:
+
+const newComments = [comments.slice(0,commentIndex), comments.slice(commentIndex +1)] // would give an array of arrays
+const newComments = [...comments.slice(0,commentIndex), ...comments.slice(commentIndex +1)]
+
+// SPREADING INTO A FUNCTION
+
+const inventors = ['einstein', 'newton', 'galileo'];
+const newInventors = ['musk', 'jobs'];
+
+inventors.push(newInventors); // produces nested arrays
+
+inventors.push.apply(inventors, newInventors); // but this is confusing .....
+
+inventors.push(... newInventors); // every single argument of the array is spread into the function!
+
+function sayHi(first, hi) {
+	alert(`Hey there ${first} ${last}`)
+}
+
+const name = ['Wes', 'Bos'];
+
+sayHi[name[0], name[1]);
+sayHi(...name) // automatically spreads items in array as arguments. 
+
+// ... REST PARAM
+
+// does the exact oppost of ... : takes the rest of the items and packs them INTO an array
+
+function convertCurrency(rate, amount1, amount2, amount3) {
+	// can use arguments, but we want the first thing to be the rate and the REST to be the amounts ...
+
+}
+
+convertCurrency(1.54, 10, 23, 52, 1, 65)
+
+function convertCurrency(rate ...amounts) {
+	return amounts.map(amount => amount * rate);
+}
+
+// DESTRUCTURING 
+
+const runner = ['Wes Bos', 123, 5.5, 5, 3, 6, 36] 
+const [name, id, runs] = runner; // this will just grab the 3rd thing
+const [name, id, ...runs] = runner;
+
+
+// OBJECT LITERAL UPGRADES
+
+const first = 'snickers';
+const last = 'bos';
+const age = 2;
+const breed = 'King Charles Cav';
+
+const dog = {
+	first: first,
+	last: last,
+	age: age,
+	breed: breed
+}
+
+// if the keys are the same, don't need the colon!
+
+const dog1 = {
+	first,
+	last,
+	age, 
+	breed
+}
+
+// method defs inside of an object: 
+
+const modal = {
+	create: function(selector){
+		// old way to do it
+	}, 
+	open(content) {
+		// shortened way
+	}
+	}, 
+	close(goodbye){
+		// shortened way
+	}
+	
+}
+
+// computed property names
+
+const key = 'pocketColor';
+const value = '#ffc600';
+
+const tShirt = {
+	[key]: value
+	[`${key}Opposite`]: invertColor(value)
+};
+
+// dynamically setting values
+
+function invertColor(color) {
+	// takes the hex color and returns the opposite
+}
+
+const keys = ['size', 'color', 'weight']
+const values = ['medium', 'red', 100]
+
+const shirt = {
+	[keys.shift()] = values.shift(),
+	[keys.shift()] = values.shift(),
+	[keys.shift()] = values.shift()
+}
 
 
 
