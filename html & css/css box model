@@ -1,0 +1,54 @@
+css box model
+
+actual rendered height and width =
+padding + border + (height/width)
+
+if you set a width of 200px or relative width of 25%, the element will only be that exact size if it has no padding or border. 
+
+Calculating a desirec width on the page involves subtracting padding and border from the width property. 
+
+.sidebar {
+  width: 158px;
+  padding: 20px;
+  border: 1px solid #DDD;
+}
+
+^ but the actual rendered width is 200 px - this is confusing. 
+
+box-sizing property in combination with border-box value uses width property as the actual rendered width.
+
+.sidebar {
+  box-sizing: border-box;
+  width: 200px;
+  padding: 20px;
+  border: 1px solid #DDD;
+}
+
+.box {
+  
+  /* Apply a fluid width of 90% and a height of 300px. 
+  The width of .box should get no wider than 600px. */  
+  
+  width: 90%;
+  height: 300px;
+  max-width: 600px;
+
+  /* Add 20 pixels of padding on all four sides. */
+  padding: 20px;
+  
+  /* Apply a 2px solid border to each side. */
+  border: 2px solid #8292b1;
+  
+  /* Use margins to center .box on the page. */
+  margin: auto;
+  
+  /* Prevent the contents of .box from overflowing. */
+  overflow: auto;
+  /* can also use value of scroll and scrollbar will always
+  /* overflow-Y will also just ensure scroll is vertical.
+  
+  /* Force border-width and padding values into the total width and height of .box */
+  box-sizing: border-box;
+  
+}
+

@@ -1,0 +1,51 @@
+D3: UPDATE CSS VARIABLES W JS
+
+<input> & <label> elements ex: 
+
+<label for="spacing">Spacing:</label>
+<input type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+
+Create variables in CSS: 
+
+ex: 
+
+:root {
+--base: 
+--spacing: 
+--blur
+}
+
+img{
+    padding: var(--spacing);
+    background: var(--base);
+    filter: blur(var(--blur));
+}
+
+data attributes for HTML - simply prefixed with data: 
+
+ex: 
+data-sizing="px"
+
+so that you can grab a value attribute and append with the data-sizing. 
+
+this.dataset 
+- object that contains all the dataattributes from that specific element. 
+- so anything you stored w/ attribute named data- prefix  will be in that object. 
+
+:root selects the entire document
+
+
+D4 ARRAY CARDIO
+
+.sort() takes a function that returns -1 or 1 based on desired sorting. 
+
+EXAMPLE: 
+> lst = [1, 7, 9, 2, 3, 4, 6, 7]
+[ 1, 7, 9, 2, 3, 4, 6, 7 ]
+> lst.sort((a, b) => (a < b ? 1 : -1));
+[ 9, 7, 7, 6, 4, 3, 2, 1 ]
+> lst
+[ 9, 7, 7, 6, 4, 3, 2, 1 ]
+> lst.sort((a, b) => (a > b ? 1 : -1));
+[ 1, 2, 3, 4, 6, 7, 7, 9 ]
+

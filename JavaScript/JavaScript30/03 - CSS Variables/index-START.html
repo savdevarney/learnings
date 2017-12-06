@@ -23,8 +23,24 @@
   <style>
 
     /*
-      misc styles, nothing to do with CSS variables
+      defining the variables ...
     */
+
+    :root {
+      --base: #ggc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
 
     body {
       text-align: center;
@@ -45,6 +61,30 @@
   </style>
 
   <script>
+
+// writing Javascript to update variables:
+
+// select all the inputs on the page with class 'controls' --> returns a NODE LIST.  ForEach is on prototype of NodeList, so don't need to conver to an array. 
+
+const inputs = document.querySelectorAll('.controls input')
+
+function handleUpdate(evt) {
+  console.log(evt);
+  console.log(evt['srcElement']['attributes']['data-sizing']);
+  // data-sizing="px"
+  console.log(this);
+  // this === the DOM element the listener was on
+  console.log(this.dataset);
+  // DOMStringMap {sizing: 'px'}
+  const suffix = this.dataset.sizing || '';
+  document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+
+}
+
+inputs.forEach(input => input.addEventListener('change', handleUpdate));
+
+//inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+
   </script>
 
 </body>

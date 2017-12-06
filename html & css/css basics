@@ -1,0 +1,110 @@
+Content layer (HTML)
+Presentation layer (CSS)
+Behavior layer (JS)
+
+CSS 3 introduced many inbrowser design features and layout features (flexbox)
+
+CSS resources
+- MDN
+- Web Platform Docs
+
+Inline and Internal Styles & External Styles
+
+Author styles
+
+linking to an external style sheet (most common) 
+<link rel="stylesheet" href="css/style.css"> 
+
+css import statement on HTML:
+<style>
+@import 'css/import-styles.css';
+</style>
+
+import a style sheet from within a style sheet (put import statement at top of style sheet you want to import into).
+
+often common to break out into base styles, layout, typography, etc.  Be cautious about performance ... (requires server request to load)
+
+SELECTORS
+
+patterns that allow us to target HTML elements and apply styles to them. 
+
+Type Selectors (to type element type or ELEMENT SELECTORS)
+
+footer {
+    
+}
+
+others p, a, h1, etc.
+
+ID selectors
+
+#primary-content {}
+
+Class selectors
+
+.primary-content {}
+
+
+REUSING CLASSES
+
+- an element can also have multiple classes assigned to it
+- try to avoid repeating CSS to enhance maintainability
+- styles in ID will always carry more weight than class selectors
+- do not share the same properties btw classes & IDs
+
+DESCENDENT SELECTORS
+- targeting elements based on the relationship
+- targeting an element that's a descendent of another element
+
+ex: 
+
+header span {}
+
+.main-header span {} <-- this is a lot more specific
+
+commonly used to style lists: 
+
+ul li {} <--- list elemenst inside an unordered list element
+
+PSEUDO CLASSES
+- similar to classes but not explicitly defined and not in source code. 
+- can target elements dynamically based on user interaction, element state, etc. 
+
+ex: 
+
+link history pseudo classes: styling links based on whether they've been clicked on. 
+
+a:link {} <-- targets unvisited links
+a:visited {} <-- targets visited links
+a:hover{} <--- link when hovering
+
+:hover pseudo class can be applied to any element (paragraph, button, etc)
+
+:active <--- applies when an element is being activated by user
+
+a:active {} <--- when the mouse is pressed, this will be applied
+
+:focus <--- applied to interactive elements as soon as it receives focus (when the browser discovers the user is ready to interact with it)
+
+a:focus {} <-- can tab through the links and see the focus style
+
+:focus {} by itself will apply the style to whatever is in focus
+
+CSS DATA TYPES
+
+Vales: word, number, length, image, url
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
