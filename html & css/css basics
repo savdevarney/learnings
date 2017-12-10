@@ -90,9 +90,173 @@ a:focus {} <-- can tab through the links and see the focus style
 
 :focus {} by itself will apply the style to whatever is in focus
 
+
 CSS DATA TYPES
 
-Vales: word, number, length, image, url
+Vales: color, integer, number, length, image, url, percentage
+
+length data type: px, em, rem etc
+
+ex. 
+
+h1 {
+    font-size: 90px; <-- 90 = data type, and px = length
+}
+
+UNIT TYPES FOR LENGTH VALUES
+
+When using a number value, have to define length or unit for that value. 
+
+absolute: 
+1. px
+
+"px" unit in CSS doesn't have anything to do with actual pixels - it's a reference unit.  The way CSS pixels are displayed has more to do w/ pixel density of the device. 
+
+200 px ... on standard device, appears that way
+but on a device w/ twice as much pixel density - it's actually now twice as long or high. 
+
+Provides consistency across viewing devices. 
+
+
+CSS px is an angular measurement: http://inamidst.com/stuff/notes/csspx
+
+
+relative: 
+1. percentage
+
+when using a %, the value is measured relative to a parent element's length.  Commonly used for layout as it allows fluid sizing relative to the container.  
+
+selecting multiple elements:
+- use a comma
+
+.primary-content, 
+.secondary-content {
+    width: 60%;
+}
+
+p {
+    font-size: 150%; <-- makes font size 1.5x the default
+}
+
+span.title {} <-- selects the span elements with class of title. 
+
+RELATIVE LENGTH VALUES
+
+- em unit (font relative, becuase it's calculated based on a parent element's font size)
+
+for ex - default font size is 16px so if you set body font-size value to 1em, eq to 16px. 
+
+converting a pixel to equivalent em value - 
+Divide the desired element px value by the parent elements font size in pixels.
+
+26px/16px = 1.625em
+
+compounding effect that happens in nested elements ... for ex: 
+
+if .main-header font-size is parent and we set font-size as 2em, all children are now relative to that.  It's equal to 32 px because body's font-size is 1em or 16px. 
+
+
+REM UNITS
+
+- gets around the em font size compounding problem.  Stands for Root Em.  It's only relative to the root element of the page, not the parent.  HTML element = root, which has a default 16px font size. 
+
+COLOR VALUES
+
+- hex
+- rgb(255, 169, 73);
+- rgba(255, 169, 73, .4) <-- a = opacity
+
+255 = white
+
+
+LINE HEIGHT
+
+commonly used in the body element
+
+body {
+    line-height: 1.5;
+}
+
+Common practice: 
+unitless numbers are always proportional and scales with the page. Browser will multiple the font size of each element by 1.5 to determin the line height. 
+
+font short hand: font size and family must be deifined and order of the values is important. 
+
+font: normal 1em/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+THE CSS BOX MODEL
+
+Block elements take the full width available from the parent and creates a new line before and after the element. 
+
+Inline elements only take up as much width as needed and don't force any new lines - span, img, anchor
+
+- content (contains actual content)
+- padding (to give content area breathing room)
+- border (outline)
+- margin (space outside the box)
+
+padding: 100px 120px 50px 20px; <-- short hand, top, right, bottom, left.
+
+fluid padding values: 
+percentage is relative to total width NOT height
+
+padding: 18%, 24%; <-- 18% to top and bottom based on width and 24% to left and right ALSO based on width. 
+
+BORDERS
+
+border-width
+border-style
+border-color
+border: width, style, color;
+
+MARGINS
+Margin: 105px 0 60px 0; <-- short hand (top, right, bottom, left)
+
+could make this 105px 0 and 60px and 2nd value is applied to right and left side. 
+
+margin applies space by pushing other elements AWAY
+
+Margin can be negative.  Will cause elements nearby to overlap. 
+
+margin: auto .. browser automatically calculates margins and set them to be equal (centers the div perfectly in the available space)
+
+DISPLAY VALUES
+
+-none
+-inline
+-block
+-inline block
+
+display: none (element gone from page)
+
+giving links a display property and setting it's display value to block ... all links will be displayed on it's own line with a line before and a line after
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
