@@ -66,6 +66,22 @@
       align-items: center;
     }
 
+    .panel > *:first-child {
+      transform: translateY(-100%); /*puts them off screen to start */
+    }
+
+    .panel.open-active > *:first-child {
+      transform: translateY(0);
+    }
+
+    .panel > *:last-child {
+      transform: translateY(100%); /*puts them off screen to start */
+    }
+
+    .panel.open-active > *:last-child {
+      transform: translateY(0);
+    }
+
     .panel p {
       text-transform: uppercase;
       font-family: 'Amatic SC', cursive;
@@ -78,6 +94,7 @@
 
     .panel.open {
       font-size:40px;
+      flex: 5; /* when it has a class of open, it will take 5x amount of room as the rest of them */
     }
 
   </style>
@@ -112,6 +129,24 @@
   </div>
 
   <script>
+
+  const panels = document.querySelectorAll('.panel');
+
+  function toggleOpen() {
+    this.classList.toggle('open');
+  }
+
+  function toggleActive(e) {
+    console.log(e.propertyName); /* font-size and flex-grow are triggered
+    /* this.classList.toggle('open-active'); < --- can't do this bec of multiple transitionEnd evts being fired */
+
+    if(e.propertyName.includes('flex'){
+      this.classList.toggle('open-active');
+    })
+  }
+
+  panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+  panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
 
   </script>
 
