@@ -90,6 +90,8 @@ a:focus {} <-- can tab through the links and see the focus style
 
 :focus {} by itself will apply the style to whatever is in focus
 
+*** do IDs have browser functionality? Yes, we can use IDs as fragment identifiers that create anchors in a page
+
 
 CSS DATA TYPES
 
@@ -190,10 +192,10 @@ Block elements take the full width available from the parent and creates a new l
 
 Inline elements only take up as much width as needed and don't force any new lines - span, img, anchor
 
-- content (contains actual content)
-- padding (to give content area breathing room)
-- border (outline)
-- margin (space outside the box)
+    - content (contains actual content)
+    - padding (to give content area breathing room)
+    - border (outline)
+    - margin (space outside the box)
 
 padding: 100px 120px 50px 20px; <-- short hand, top, right, bottom, left.
 
@@ -204,10 +206,10 @@ padding: 18%, 24%; <-- 18% to top and bottom based on width and 24% to left and 
 
 BORDERS
 
-border-width
-border-style
-border-color
-border: width, style, color;
+    border-width
+    border-style
+    border-color
+    border: width, style, color;
 
 MARGINS
 Margin: 105px 0 60px 0; <-- short hand (top, right, bottom, left)
@@ -222,14 +224,40 @@ margin: auto .. browser automatically calculates margins and set them to be equa
 
 DISPLAY VALUES
 
--none
--inline
--block
--inline block
+    -none
+    -inline
+    -block
+    -inline block
 
 display: none (element gone from page)
 
 giving links a display property and setting it's display value to block ... all links will be displayed on it's own line with a line before and a line after
+
+COLORS
+
+examples
+
+    - keyword
+    - hexidecimal
+    - rgb function (three numbers ranging from 0 --> 255 + optional opactiy ... .4 or 40%)
+
+
+TEXT STYLES
+
+    - text-align: horizontal alignment of text (center; right; justify;)
+    - text-transform: changes case of text (uppercase; lowercase; capitalize;)
+    - text-decoration: line decoration, commonly used to remove underlines and links (none; <-- removes underlines from links)
+
+grouping: 
+
+.primary-content, 
+.main-header {
+    text-align: center;
+} <-- ex of grouping selectors
+
+
+
+
 
 
 
