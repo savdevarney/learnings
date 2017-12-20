@@ -256,6 +256,46 @@ grouping:
 } <-- ex of grouping selectors
 
 
+WIDTH AND HEIGHT PROPERTIES
+
+- by defaut, elements is as wide or high as the content it holds
+- when we use a % value, that's measured relative the the parent elements width.
+
+scaling down an image with class of arrow: 
+
+.arrow {
+    width: 50px;
+}
+
+scaling up a header div:
+
+.main-header {
+    height: 850px;
+}
+
+*** WHEN SETTING HEIGHT/WIDTH PROPERTIES ... YOU ARE JUST CHANGING THE ATTRIBUTES OF THE CONTENT AREA ITSELF (if you were add padding, the total height would increase)
+
+BOX-SIZING and MAX-WIDTH
+
+content {
+    width: 960px;
+    box-sizing: border-box; <-- forces the padding into the width calculation
+    padding-left: 50px;
+    padding-right: 50px;
+    margin: auto;
+}
+
+^ in the above, the final width of the rendered containers is 960 px, regardless of padding value. 
+
+box-sizing dynamically subtracts borders and paddings form the width and heigh properties we set, so makes it easier to define flexible widths and heights. 
+
+can declare box-sizing: border-box once using universal selector: 
+
+* {
+    box-sizing: border-box;
+}
+
+
 
 
 
