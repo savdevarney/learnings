@@ -295,6 +295,26 @@ can declare box-sizing: border-box once using universal selector:
     box-sizing: border-box;
 }
 
+content may be too wide for good readability if width is, for ex 75%
+
+content {
+    width: 75%;
+    padding-left: 500px;
+    padding-right: 50px;
+    max-width: 900px; 
+}
+
+^ once content div expands to 900px wide, the max-width value overrides the width value.  Once the browser detects the div is 900px wide, it stops expanding it. 
+
+
+max-width also commonly used to create responsive images - give your img elements a max-width property: 
+
+img {
+    max-width: 100%;
+}
+
+^ img is fluid and proportionally adjusts to the weidth of it's containing div.  
+
 
 
 
