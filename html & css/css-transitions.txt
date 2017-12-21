@@ -41,3 +41,7 @@ TRANSITION-TIMING-FUNCTION
 TRANSITION-DELAY
 
     - sets a time value, sec or ms that defines how long transition should delay before starting
+
+SHORTHAND
+
+    - ! do not use commas unless you are identifying numerous transitions
