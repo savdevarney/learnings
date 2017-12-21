@@ -1,0 +1,43 @@
+TRANSITIONS
+
+For a transition to take place, an element must have a change in state, and a different style must be idneitifed for each state. 
+
+Four transition-related properties: 
+    - transition-property
+    - transition-duration
+    - transition-timing-function
+    - transition-delay
+
+TRANSITION-PROPERTY
+
+    - the property that will change in the way identified
+    - any other properties included when changing an element's state, but not included within the transition-property will not receive the transition behaviors.
+    - separate multiple properties w/ a comma
+    - only properties that have an identifiable halfway point may be transitioned: color, font size, etc. 
+
+PROPERTIES THAT CAN BE TRANSITIONED: background-color background-position border-color border-width border-spacing bottom clip color crop font-size font-weight height left letter-spacing line-height margin max-height max-width min-height min-width opacity outline-color outline-offset outline-width padding right text-indent text-shadow top vertical-align visibility width word-spacing z-index
+
+TRANSITION-DURATION
+
+    - seconds and miliseconds, and can be fractional - for ex .2s
+    - when transitioning multiple properties, can have multiple durations but they must be declared in the same order as in the transition-property value. 
+
+
+TRANSITION-TIMING-FUNCTION
+
+    - sets the speed of timing
+    - values: 
+        - linear
+        - ease-in
+        - ease-out
+        - ease-in-out
+        - cubic-bezier(x1, y1, x2, y2)
+        - step-start
+        - step-stop
+        - steps(number, direction)
+    - can declare for multiple properties, comma separate
+
+
+TRANSITION-DELAY
+
+    - sets a time value, sec or ms that defines how long transition should delay before starting

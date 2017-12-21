@@ -1,0 +1,303 @@
+css layout basics from learnlayout.com
+
+THE DISPLAY PROPERTY
+    - block
+    - inline
+    - none (renders the page as though it doesn't exist, vs visability: hidden which hides element, but it still takes up space as if it were visable)
+
+MARGIN: AUTO
+
+    - setting width, prevents stretching to edges of container
+    - set left and right margins to auto to horizontally center
+    (problemeatic when window is narrower than width)
+
+MAX WIDTH
+
+    - max-width instead of width
+    - improves handling of small windows
+
+THE BOX MODEL
+
+    - width = content area only
+    - width of element can strech beyond what you set. 
+
+old solution: doing extra math ...
+
+BOX-SIZING
+    
+    - box-sizing: border-box;
+    - padding and border will no longer impact width
+    - can use this code w/ universal selector: 
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+POSITION
+
+    - STATIC: default, not positioned.
+    - RELATIVE: set top, right, bottom & left props adjusts it away from normal position
+    - FIXED: set top, right, bottom & left to set it relative to the viewport
+    - ABSOLUTE: set top, right, bottom & left to adjust it realtive to the nearest positioned ancesotr.  If an absolute element has no positioned ancestors (if container isn't set to something like relative), it uses the document body and moves along with page scrolling. 
+
+EXAMPLE: 
+
+.container {
+  position: relative;
+}
+nav {
+  position: absolute;
+  left: 0px;
+  width: 200px;
+}
+section {
+  /* position is static by default */
+  margin-left: 200px;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 70px;
+  background-color: white;
+  width: 100%;
+}
+body {
+  margin-bottom: 120px;
+}
+
+FLOAT
+
+    - used for wrapping text around images
+
+img {
+  float: right;
+  margin: 0 0 1em 1em;
+}
+
+CLEAR PROPERTY
+
+- important for controlling behavior of floats
+
+Example: 
+
+<div class="box">...</div>
+<section>...</section>
+
+.box {
+  float: left;
+  width: 200px;
+  height: 100px;
+  margin: 1em;
+}
+
+^ results in section text floating AROUND the div - the section surrounds the whole thing! 
+
+To have the section appear after the div: 
+
+<div class="box">...</div>
+<section class="after-box">...</section>
+
+.box {
+  float: left;
+  width: 200px;
+  height: 100px;
+  margin: 1em;
+}
+.after-box {
+  clear: left;
+}
+
+^ results in the after-box appearing below the floated div.  Value of left clears elements floated to the left.  Can also clear right and both. 
+
+CLEARFIX HACK
+
+- sometimes, when using floats ... if the image is taller than the element containing it, and it's floated, it can overflow outside of its container. 
+
+adding "clearfix" class, and this styling fixes: 
+
+.clearfix {
+    overflow: auto;
+}
+
+
+FLOAT LAYOUT EXAMPLE
+
+nav {
+  float: left;
+  width: 200px;
+}
+section {
+  margin-left: 200px;
+}
+
+PERCENT WIDTH
+
+    - measurement relative to the containing block.  
+    - great for images
+
+EXAMPLE - PERCENT WIDTH FOR LAYOUT
+
+(however, this can require more work.  The nav content starts to wrap in a displeasing way when the window is too narrow)
+
+nav {
+  float: left;
+  width: 25%;
+}
+section {
+  margin-left: 25%;
+}
+
+MEDIA QUERIES
+
+    - Most powerful way to execute responsive design
+
+EXAMPLE - display layout in one column when browser is too small to fit the menu in the sidebar. 
+
+@media screen and (min-width:600px) {
+  nav {
+    float: left;
+    width: 25%;
+  }
+  section {
+    margin-left: 25%;
+  }
+}
+@media screen and (max-width:599px) {
+  nav li {
+    display: inline;
+  }
+}
+
+*** the most commonly used query is max-width. At any width that is less than the max-width specified, all of the CSS within the query will take effect.
+
+Meta viewport: makes layout on mobile even better ...
+
+INLINE-BLOCK
+
+    - can create a grid of boxes that fills the browser width and wraps nicely. (easier than using float)
+
+
+EXAMPLE (floats)
+
+.box {
+  float: left;
+  width: 200px;
+  height: 100px;
+  margin: 1em;
+}
+.after-box {
+  clear: left;
+}
+
+
+EXAMPLE (inline-block)
+
+.box2 {
+  display: inline-block;
+  width: 200px;
+  height: 100px;
+  margin: 1em;
+}
+
+INLINE-BLOCK LAYOUT
+
+    - inline-block elements are affected by the vertical-align property, which you probably want set to top
+    - you need to set the width of each column
+    - there will be a gap btw the columns if there is any whitespace btw them in the HTML. 
+
+
+nav {
+  display: inline-block;
+  vertical-align: top;
+  width: 25%;
+}
+.column {
+  display: inline-block;
+  vertical-align: top;
+  width: 75%;
+}
+
+
+COLUMN
+
+    - new set of CSS properties that let you easily make multi-column text: 
+
+.three-column {
+  padding: 1em;
+  -moz-column-count: 3;
+  -moz-column-gap: 1em;
+  -webkit-column-count: 3;
+  -webkit-column-gap: 1em;
+  column-count: 3;
+  column-gap: 1em;
+}
+
+FLEXBOX
+
+    - new flexbox layout posised to redefine how we do layouts!
+
+EXAMPLE - layout
+
+.container {
+  display: -webkit-flex;
+  display: flex;
+}
+nav {
+  width: 200px;
+}
+.flex-column {
+  -webkit-flex: 1;
+          flex: 1;
+}
+
+EXAMPLE - fancy layout
+
+.container {
+  display: -webkit-flex;
+  display: flex;
+}
+.initial {
+  -webkit-flex: initial;
+          flex: initial;
+  width: 200px;
+  min-width: 100px;
+}
+.none {
+  -webkit-flex: none;
+          flex: none;
+  width: 200px;
+}
+.flex1 {
+  -webkit-flex: 1;
+          flex: 1;
+}
+.flex2 {
+  -webkit-flex: 2;
+          flex: 2;
+}
+
+EXAMPLE - centering
+
+.vertical-container {
+  height: 300px;
+  display: -webkit-flex;
+  display:         flex;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+}
+
+
+
+
+
+
+
+
+
+
+
