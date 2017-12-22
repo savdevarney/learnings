@@ -1,0 +1,106 @@
+Components
+NgModule file
+Creating components
+Data binding & string interpolation to insert dynamic values into HTML
+Types & interfaces
+
+COMPONENTS
+
+What is a componenet? 
+
+	- The bulk of an angular app
+	- pieces of UI (nav bar, headers, input boxes)
+	- include a class which can have properties and methods
+	- include tempaltes (what user sees)
+	- bind from class --> template and class <-- template
+
+
+Example layout: 
+
+	- Root App Component (all other nested inside)
+	- Pass ata in and out
+	- Reactive
+
+App Component
+	Navbar component
+	Posts component
+		post search
+		post component
+	sidebar component
+
+Benefits: 
+
+	- organize code
+	- break up the UI so we can encapsulate funtionality
+	- promotes reusability
+	- better teamwork
+
+
+Exampinging a simple componenet (root app)
+
+import { Componenet } from '@angular/core';
+
+@Component({
+	selector: 'my-app',
+	remplate: `<h1>Hello {{name}}</h1>`,
+})
+
+export class AppComponent {
+	name = 'Angular';
+}
+
+<body>
+	<my-app>Loading AppComponenet content here ... </my-app>
+</body>
+
+
+1. import from angular/core ... bringing in corecomponent class from angular core library in angular
+2. Use the componenet decorator to add meta-data to component 
+		- selector: directive to insert into HTML
+		- template using backticks (to put on myltiple lines)
+				- can also use temlate URL to point to a separate file
+		- double currly is string interpoloation for dynamic data
+3. class of AppComponeent with name value of 'Angular'
+
+APPLICATION LIFECYCLE
+
+- Angular creates, updates and destroys components as the user moves through the application.  Your app can take action at each moment in this lifecycle through optional lifecycle hooks, like: 
+		- ngOnInit() ...let's us add functionality when a component initializes or loads. 
+		- others for when a componenet changes or is destroyed. 
+
+
+Can use CLI to generate componenets
+
+ng g component componenets/my-componenet
+
+- creates the typescript file
+- html file
+- css file
+
+- adds to @ngModule decorator located in the app.module.ts file
+
+
+NgModule 
+
+Going through app.module.ts:
+
+THINK OF IT LIKE A REGISTRY FOR THE REST OF THE APPLICATION
+
+- In addition to componenets we can have modules
+- every angular app has this AppModule and it uses the @NgModule decorator
+- BrowserModule - takes care of displaying app in browser
+- importing NGModule itself to use decorator
+
+
+CREATING COMPONENTS
+
+- ng serve 
+
+app.component.ts file
+
+1. create new folder - componenets
+2. create new file for componenet - sandbox.componenet.ts
+3. create the componenet, export the class (using pascal case, and match file name but file name uses dashes for multiple words)
+
+
+

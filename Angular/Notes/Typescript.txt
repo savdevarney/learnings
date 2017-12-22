@@ -1,0 +1,51 @@
+TYPESCRIPT
+
+- superset of JavaScript created by Microsoft (JS w extra)
+- compiles to plain JS code
+- gives extra features
+- includes many ES6 features
+
+- static typing
+- object classes
+- modules
+- let/const scoping
+- other ES6 features like arrows
+
+TSC --> Type script commpiler: TS --> compiled to JS on the fly. 
+
+Regular JS not staticially typed (don't have to say if a value is a str or var, which can be bad ... mmore errorprone)
+
+let name:string = 'Brad Traversy';
+
+function addNumbers(num1:number, num2:number):number {
+	return num1 + num2;
+}
+
+^ saying that the parameters, and the result of the function all need to be numbers. 
+
+Available types: 
+	- string
+	- number
+	- boolean
+	- array
+	- any
+	- void
+	- null
+	- tuple
+
+Object based classes
+
+class Greater {
+	greating: string;
+	constructor(message:string) {
+	this.greeting = message;
+	}
+	greet() {
+	return "Hello, " + this.greeting;
+	}
+}
+
+let greater = new Greater("world")
+
+
+

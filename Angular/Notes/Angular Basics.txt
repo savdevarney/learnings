@@ -1,0 +1,51 @@
+WHAT IS ANGULAR?
+
+- JS framework
+- creted / maintained by google
+- builds powerful fonrt-end applications
+- used w/ any backend (particularly restful APIs)
+- part of the very powerful MEAN stack (mongo, express, angular, node)
+- three main versions of angular. 
+
+WHY ANGULAR? 
+
+- Rapid development & code generation
+- doing things that are often complicated w/ vanilla JS
+- code organization (componenets) & productivity
+- services reach across all componenets & can send and receive data
+- what html would have looked like if it were created for dynamic content vs static pages. 
+- complete cross platform
+- unit testing ready
+
+CORE FEATURES
+
+- component
+- services
+- routing
+- testing
+- build tools
+- data binding
+- templating
+- HTTP module
+- observables
+- forms module
+- directives
+- pipes
+- animation
+- typescript
+
+2 main ways to install 
+
+	- Angular CLI (command line)
+	- quickstart seed (github) ... boiler plate w/ all files/folders
+
+	dependencies: Node.js & NPM
+
+VERSION HISTORY OF ANGULAR
+
+- Scope: defined to bind data fromt he model to/from the view
+- Angular 2 was a complete rewrite w/ no controllers and no scope ... everything was put into componenets.  Developers were really pissed ... no backwards compatability and no guides, just have to rewrite. 
+
+- Version 4: ~ "Angular"
+- backwards compatible with Angular 2
+

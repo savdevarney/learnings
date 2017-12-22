@@ -1,0 +1,28 @@
+Overview
+-Setting up our environment
+-Using the Angular CLI
+-Angular 4 file structure
+-Using the quickstart seed (boilerplate)
+-What is typescript?
+
+CLI recommended to learn ... 
+
+in projects folder: 
+
+- npm install -g @angular/cli
+
+- ng new angularapp 
+^ sets up all the core files we need to run the app, configures typescript, testing modules, etc. 
+
+- cd angularapp
+- ng serve (port 4200 by default)
+
+
+package.json
+- app name
+- app version
+- dependencies
+- license
+- scripts (short cuts we can run to do certain things - like ng serve)
+
+
