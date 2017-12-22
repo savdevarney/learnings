@@ -1,0 +1,57 @@
+FLEXBOX
+
+INTRODUCTION & FLEX DIRECTION
+
+    - parent container has display: flex
+    - there is also display: inline-flex
+    - children are immediately flex items
+    - height: 100vh ... makes the container stretch 100% vertically
+
+Main and Cross Axis
+
+    - flex-direction: row <-- this is the default
+        - Main-axis is left to right
+        - cross-axis is top to bottom
+    - flex-direction: column <-- instead of side by side, items are stacked.
+        - Main: top to bottom
+        - cross is left to right
+    - flex-direction: row-reverse
+    - flex-direction: column-reverse
+
+WRAPPING ELEMENTS WITH FLEXBOX
+
+Give each item a width of 300 px, and if they won't all fit in container ... they redistribute. 
+
+    - flex-wrap: nowrap; <-- default, set on the container
+    - flex-wrap: wrap; <-- keeps 300px width
+
+Even if height is set to 100vh, flex will still try and evenly distribute within the container.  
+
+    -flex-wrap: wrap-reverse; <-- items still start on left but start on bottom and go on up
+
+padding and border are part of the box model and factored into widths if you're using box-sizing: border-box
+
+FLEXBOX ORDERING
+
+    - move dom elements w/o actually moving them in the DOM. 
+    - flex: 1 <-- when set on items, distributes evenly
+    - order: 5 <-- setting this on box 3 would move it all the way to the end. 
+    - default order is set to zero so when it's greater than zero, it puts it on the end
+    - orders can be negative. 
+    - similar to z-index.
+    - caveat: if user tries and slect (highlight/copy) - it's out of order. 
+
+
+ALIGNMENT
+
+Justifying content: how are the items aligned on the main axis? 
+
+    - justify-content: flex-start; <-- default (items aligned to the start of the flex container)
+    - justify-content: flex-end;
+    - justify-content: center; <-- no margin tricks, etc!!!
+    - justify-content: space-between; <-- divies up space btw each item (w/ first and last at start and end)
+    - justify-content: space-around; <-- similar, but w/ space on start/end left/right. 
+
+    * the container needs to have dimensions set
+    * if the container was as small/big as the content ... woudln't work in column direction. 
+
