@@ -103,4 +103,107 @@ app.component.ts file
 3. create the componenet, export the class (using pascal case, and match file name but file name uses dashes for multiple words)
 
 
+Data Binding, Properties & String Interpolation
+
+SandboxComponenet - Data Binding
+    - created property called name (directly in the class)
+    - can bind the property data to the template {{ }}
+    - dynamically bind data to our template
+    - {{ }} --> string interpolation (as one way to bind data)
+    - property values can be objects as well as by functions
+
+
+constructor: function that runs when an object is instantiated from the class or component is initialized
+
+properties - we have access to these and all methods in the class, including constructor.
+
+So could take a property like age and reference it like this.age.
+
+Component class is nothing more than properties and methods
+
+<ul>
+
+    <li> {{ 'Hello World' }} </li>
+    <li> {{ 1 + 1 }} </li>
+    <li> {{ showAge() }} </li>
+
+</ul>
+
+COMPONENET = 
+1. class with properties and method + 2. template
+
+
+
+ADDING TYPES TO PROPERTIES
+
+export class SandboxComponenet {
+	name:string = 'John Doe';
+}
+
+*** Protects your application from errors
+
+
+OBJECTS & INTERFACES
+- using them as properties
+
+customer: {id:number, name:string, email:string}
+
+or create an interface:
+
+interface Customer {
+	id:number,
+	name:string,
+	email:string
+}
+
+can also save interface as a separate file ... 
+in Components, save a new file customer.ts, export and import
+
+Interfaces help model out your data.
+
+
+*** Notes on Interfaces in TypeScript: 
+
+Example of an interface: 
+
+function printLabel(labelledObj: { label: string }) {
+    console.log(labelledObj.label);
+}
+
+let myObj = {size: 10, label: "Size 10 Object"};
+printLabel(myObj);
+
+	- type-checker: checks call to printLabel
+	- printLabel's parameter requires the obj passed has at least 1 property called label of type string
+
+Using an interface to acheive that result: 
+
+interface LabelledValue {
+    label: string;
+}
+
+function printLabel(labelledObj: LabelledValue) {
+    console.log(labelledObj.label);
+}
+
+let myObj = {size: 10, label: "Size 10 Object"};
+printLabel(myObj);
+
+	- the interface LabelledValue is a name we can now use to describe the requirement. 
+	- only the 'shape' that matters
+	- type checker does not require that the properties come in any sort of order, only that the required props are present and have required type. 
+
+
+TEMPLATE SYNTAX
+- binding properties
+- if statements
+- looping
+
+
+
+
+
+
+
+
 

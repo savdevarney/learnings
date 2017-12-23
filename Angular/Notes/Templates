@@ -1,0 +1,58 @@
+TEMPLATES
+
+    - Template Files & Stylesheets
+    - looping with ngFor directive
+    - ngIf & ngSwitch conditionals
+    - Property Binding to bind data other than strings
+    - ngStyle & ngClass binding
+    - Pipes to format data
+
+TEMPLATE FILES & STYLESHEETS
+
+    - will probably want to have template in a separate file and include a separate style sheet
+    - put each componenet in it's own folder
+    - add a component.html file and component.css file and link them together to .ts file
+    - instead of template property in @Component, use templateUrl:`./sandbox.component.html`
+    - can add 'inline' styles but setting a styles property on @Componenet
+    - if separate sytlesheet, use styleUrls property instead of styles w/ value of an array of template string locations
+
+
+TEMPLATE SYNTAX DIRECTIVES
+
+LOOPING DATA WITH ngFor DIRECTIVE
+
+Example - array:
+    - in SandboxComponenet class we have a property people that is an array of strings of first names. 
+    - just putting {{ people }} in the template would provide a comma separted string of names
+
+<ul>
+    <li> *ngFor="let person of people">
+        {{ person }}
+    </li>
+</ul>
+
+<ul>
+    <li> *ngFor="let person of people; let i = index;">
+        {{ i + 1 }} {{ person }}
+    </li>
+</ul>
+
+Example - array of objects:
+
+    - people2 is an array of objects with firstName and lastName attributes
+
+<ul>
+    <li *ngFor="let person of people2">
+        {{ person.firstName }} {{ person.lastName }}
+    <li>
+</ul>
+
+
+
+CONDITIONALS WITH NgIf & NgSwitch DIRECTIVES
+
+
+
+PROPERTY BINDING
+
+
