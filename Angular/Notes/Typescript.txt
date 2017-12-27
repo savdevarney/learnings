@@ -46,6 +46,3 @@ class Greater {
 }
 
 let greater = new Greater("world")
-
-
-
