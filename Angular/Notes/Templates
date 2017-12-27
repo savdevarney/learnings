@@ -10,10 +10,10 @@ TEMPLATES
 TEMPLATE FILES & STYLESHEETS
 
     - will probably want to have template in a separate file and include a separate style sheet
-    - put each componenet in it's own folder
+    - put each component in it's own folder
     - add a component.html file and component.css file and link them together to .ts file
     - instead of template property in @Component, use templateUrl:`./sandbox.component.html`
-    - can add 'inline' styles but setting a styles property on @Componenet
+    - can add 'inline' styles but setting a styles property on @component
     - if separate sytlesheet, use styleUrls property instead of styles w/ value of an array of template string locations
 
 
@@ -22,7 +22,7 @@ TEMPLATE SYNTAX DIRECTIVES
 LOOPING DATA WITH ngFor DIRECTIVE
 
 Example - array:
-    - in SandboxComponenet class we have a property people that is an array of strings of first names. 
+    - in Sandboxcomponent class we have a property people that is an array of strings of first names. 
     - just putting {{ people }} in the template would provide a comma separted string of names
 
 <ul>
@@ -51,8 +51,106 @@ Example - array of objects:
 
 CONDITIONALS WITH NgIf & NgSwitch DIRECTIVES
 
+<span *ngIf="showName"> {{ name }} </span>
+<span *ngIf="!showName"> World </span>
+
+<span *ngIf="showName; else noName"> {{ name }} </span>
+<ng-template #noName> World </ng-template>
+
+<p> Hello {{ showName ? name : "world" }} </p>
+
+<div [ngSwitch]="greeting">
+    <div *ngSwitchCase="'1'">Hello World</div>
+    <div *ngSwitchDefault>Hello</div>
+</div>
+
+
+export class SandboxComponent {
+    name:string = 'John Doe';
+    showName:Boolean = false;
+    greeting:number = 1
+}
+
 
 
 PROPERTY BINDING
+
+    - binding data from class and component to attributes in our template
+    - ways to do this: string interpolation, plus many others
+    - we can bind almost any html attribute and set it to a dynamic value or conditional
+    - Rendering UI dependent on properties inside of component class *** Where Angular really shines ***
+
+
+
+CLASS BINDING AND ngClass DIRECTIVE
+
+    - special directive to dynamically assign classes to elements in our template. 
+    - dynamic classes
+    - ngClass can be used to set multiple dynamic classes
+    - ex use cases: UI's - blog post and you have buttons that need to be disabled when they can't be saved, etc. 
+    - can do the exact same thing with styles instead of classes ....
+
+<h4 [class.special]="isSpecial">This class binding is special</div>
+<h4 [ngClass]="currentClasses">This div is initially special and saveable</h4>
+
++ inline styles with classes .special (color: green) and .saveable (text-transform: uppercase)
+
+    - example above (ngClass), component has properties with boolen values that should dictate styles (color and case)
+    - currentStyles is a property containing an object (initially empty)
+    - setCurrentClasses method runs on construction and sets currentClasses object's values (keys are class names and values are value of property ... { saveable: this.canSave, special: this.isSpecial})
+
+From docs:
+
+ngClass directive allows you to dynamically set CSS classes on an HTML element by databinding an expression that represents all classes to be added
+
+Operates in three ways, depending on which of three types the expression evaluates to: 
+
+    1. if string, the string should be one or more space-delimited class names
+    2. if object, then for each key-value pair ... truthy value corresponding to key that is the class name
+    3. If array, each element of array should either be a string as in 1 or object as in 2
+
+
+
+
+STYLE BINDING & ngStyle DIRECTIVE
+
+    - can bind multiple styles
+
+<div [ngStyle]="currentStyles">This div is initially saveable and special</div>
+
+    - component has properties with boolean values that should dictate font styles (size and style)
+    - currentStyles is a property containing an object
+    - setCurrentStyles method runs in constructor and sets currentStyle values for font-size and font-style keys based on truthiness of component properties {'font-style': this.canSave ? 'italic' : 'normal'}
+
+
+From docs: 
+
+ngStyle directive allows you to set CSS style on an HTML element conditionally. 
+
+as attribute: <ANY ng-style="expression">...</ANY>
+as css class: <ANY class="ng-style: expression;">...</ANY>
+
+Argument is an expression which evals to an object whose keys are CSS style names and values are corresponding values for those CSS keys.  Keys must be quoted (as some CSS style names are not value keys for an object)
+
+
+
+
+USING PIPES
+
+    - filters or formatters
+    - example: date pipe to format dates, upper/lower case, 
+    - throw them into template for interpolation curlies
+
+<p>My birthday is {{ birthday | date }} </p>
+<p>I was born in {{ brithday | date:"yyyy"}}
+
+    - in example above, birthday is a property of the component with a value of a date object (new Date(1981, 1, 15)).  Piping through | date formats to 'Feb 15, 1981'
+    - pipe can also take parameters (in this case "yyyy")
+
+
+
+
+
+
 
 
