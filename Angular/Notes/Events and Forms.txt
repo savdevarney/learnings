@@ -1,0 +1,55 @@
+EVENTS AND FORMS
+
+    - mouse events
+    - manipulating component properties
+    - keyboard & input events
+    - ngModel & 2 way binding
+    - template driven forms & validation
+
+
+MOUSE EVENTS
+
+<button (click)="fireEvent()"></button>
+
+    - event is indicated in parentheses
+    - on click, we will call the function "fireEvent"
+
+
+CHANGING PROPERTIES WITH EVENTS
+
+<button (click)="changeVlaue()">Change Value</button>
+<div *ngIf="value">
+    <h1>{{ text }}</h1>
+</div>
+
+    - component has prop (value "Hello World") and we want to hide that when button clicked
+    - component also has value(boolean)
+    - changeValue method toggles value to either true or false 
+
+sidenote: easy way to toggle: 
+
+    this.value = !this.value; 
+
+    (sets to true if false and vice versa)
+
+
+
+FORMS AND KEYBOARD EVENTS
+
+    - keyup
+    - keydown
+    - focus: when you click into the input
+    - blur: when you clicked in and then click out
+    - cut: if you cut when there's textin an input
+    - copy: like above but copy
+    - paste
+
+<div>
+    <input type="text" (keyup)="changeText($event) plaeholder="change text">
+</div>
+<h2>{{ text }}</h2>
+
+    - example of ONE way data binding via property manipulation with events
+    - component has a property (text) and a method changeText that changes text value to the value of the input field element (this.text = e.target.value)
+    - TWO way databinding (hack) would be achieved by adding a value attribute with value of {{text}}
+    - when we add that to the template, placeholder is immediately written in w/ value of 'Hello' (the value of the property of text in the component), and then is modified on text change

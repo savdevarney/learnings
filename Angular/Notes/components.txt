@@ -36,7 +36,7 @@ Benefits:
 	- better teamwork
 
 
-Exampinging a simple componenet (root app)
+Examining a simple componenet (root app)
 
 import { Componenet } from '@angular/core';
 
