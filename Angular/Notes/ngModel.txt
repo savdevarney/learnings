@@ -1,0 +1,36 @@
+ngModel
+
+https://blog.thoughtram.io/angular/2016/10/13/two-way-data-binding-in-angular-2.html
+
+simple ex:
+
+	<input [(ngModel)]="username">
+	<p> Hello {{ username }}</p>
+
+two-way data binding boils down to 1. property binding and 2. event binding.  (no actual such thing as 2-way).  
+
+w/o ngModel, we could implemnt 2-way like this: 
+
+	<input [value]="username" (input)="username = $event.target.value">
+	<p> Hello {{ username }}</p>
+
+Breaking it down: 
+
+	[value]=”username” - Binds the expression username to the input element’s value property
+
+	(input)=”expression” - Is a declarative way of binding an expression to the input element’s input event (yes there’s such event)
+
+	username = $event.target.value - The expression that gets executed when the input event is fired
+
+	$event - Is an expression exposed in event bindings by Angular, which has the value of the event’s payload
+
+
+ngModel actually comes with a property and event binding as well. Ex w/o shorthand: 
+
+	<input [ngModel]="username" (ngModelChange)="username = $event">
+	<p>Hello {{username}}!</p>
+
+
+Same rules apply. The property binding [ngModel] takes care of updating the underlying input DOM element. The event binding (ngModelChange) notifies the outside world when there was a change in the DOM. We also notice that the handler expression uses only $event and no longer $event.target.value. Why is that? As we’ve mentioned earlier, $event is the payload of the emitted event. In other words, ngModelChange takes care of extracting target.value from the inner $event payload, and simply emits that (to be technically correct, it’s actually the DefaultValueAccessor that takes of the extracting that value and also writing to the underlying DOM object).
+
+Last but not least, since writing username and ngModel twice is still too much, Angular allows the shorthand syntax using [()], also called “Banana in a box”. So after all, it’s really an implementation detail of ngModel that enables two-way data binding.

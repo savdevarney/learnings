@@ -1,0 +1,291 @@
+TYPES OF FORMS
+
+	- Class called FormControl
+	- for each input field in our form, we need to create an instance of the control class
+	- with this class added, we can check: 
+			- value of field
+			- whether field has been touched/untouched
+			- dirty (changed value) or pristine
+			- valid or invalid 
+			- errors if invalid
+
+
+	- class of FormGroup: group of controls in form
+	- each form is a control group because it contains at least one control
+	- may have a form with multiple control groups (shipping address & billing)
+	- all properties of the FormControl are also available in the FormGroup class. 
+	- for ex, valid returns true if all controls in that group are valid.
+	- Accessing props of group is easier
+
+
+simple form:
+
+	Form
+		First Name
+		comment
+
+Create: 
+- FormGroup obj for Form
+- FormControl obj for each input field
+
+2 ways to Create Controls
+	- Directives (Angular creates obj implicitly under the hood) - 'Template Driven'
+	- Code (explicitly creating them in component) - 'Reactive' or "Model-driven forms"
+
+Differences: 
+	- when we create explicitly, 
+		- have more control over validation logic
+		- good for complex forms
+		- unit testing
+	- otherwise, template driven - easier, less code, less control over validation
+
+
+ngModel on input fields
+
+	-  when you apply the ngModel directive on an input field, angular creates a control object and assocites it with the input field under the hood. 
+	- name attribute must be set
+	- to see it under the hood:
+
+		<input ngModel name="firstname" #firstName="ngModel" (change)="log(firstName)">
+
+	- ngModel object: 	
+		- Control property: instance of FormControl class
+		- properties like dirty/pristine, valid/invalid, touched/untouched, value (current value in input field)
+		- *** use FormControl class to track state changes and the validity of input fields
+
+
+
+ADDING VALIDATION
+
+Making a field required
+
+	- HTML5 we can use required attribute and Angular will use that to make it required. 
+	- in div below to display validation error
+	- in NgModel ... control property .. valid property
+	- simpler way ... ngModel ... valid (computed property) ... ngModel delegates to the underlying formControl object
+	- to show error:
+
+	<div class="alert alert-danger" *ngIf="!firstName.valid">First Name is required</div>
+
+	- to show it only if the user puts focus and moves away w/o entering a value:
+
+	<div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">First Name is required</div>
+
+	- "render the div only if the input field has been touched and the user has left w/o leaving a valid value"
+
+
+SPECIFIC VALIDATION ERRORS
+
+	- in angular, we have built in validation errors that are based on HTML5 validation attributes (like required)
+	- others: 
+			required
+			minlength="3"
+			maxlength="10"
+			pattern="regex"
+	- but you don't want to show them all in one div, you want specific validation errors. 
+
+	<input required minlength="3" maxlength="10" pattern="banana"/>
+	
+	<div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">
+
+		<div *ngIf="firstName.errors.required">First name is required.</div>
+
+		<div *ngIf="firstName.errors.minlength">First name should be a minimum of {{ firstName.errors.minLength.requiredLength }} characters.</div>
+
+		<div *ngIf="firstName.errors.pattern">First name doesn't match the pattern.</div>
+
+	</div>
+
+
+content of errors object: 
+
+ngModel
+	errors
+		minlength
+			actualLength
+			requiredLength
+		pattern
+
+
+STYLING INVALID INPUT FIELDS
+
+classes that are dynamically added to an invalid touched input field: 
+
+	class="form-control ng-invalid ng-dirty ng-touched"
+
+can use these classes to apply styles of invalid input fields
+
+in styles.css: 
+
+.form-control.ng-touched.ng-invalid {
+	border: 2px solid red;
+}
+
+
+ngForm
+
+	- directive for FormGroup
+	- by default, applied to all elements with <form> tags (w/o ngNoForm or not formGroup attributes)
+	- we can create a template variable to get a reference to the ngForm directive
+
+	<form #f="ngForm" (ngSubmit)="submit(f)">
+
+	- directive has an output property: ngSubmit
+	- we use output properties to raise custom events
+	- can be used in event binding expressions
+
+	shape of ngForm: 
+
+	// computed properties that delegate to the underlying formGroup object
+
+		dirty:
+		pristine:
+		errors:
+		touched:
+		untouched:
+		valid:
+		invalid:
+
+		form: formGroup
+			controls: 
+
+		value
+			comment: <-- these are the name attributes set on each field
+			firstName: 
+
+	// f.value ... can send as json obj to server to store
+
+
+ngModelGroup
+
+	- in complex forms, may have multiple groups in your form. 
+
+
+Directives
+	ngModel
+	ngModelGroup
+
+<div ngModelGroup=contact>
+
+	<input ngModel=firstName ... />
+
+</div>
+
+
+Now, value object in ngModelGroup will be heirarchical
+
+can display validation errors for forms in that group
+
+<div ngModelGroup="contact" #contact="ngModelGroup">
+	<div *ngIf="!contact.valid"> ... </div>
+		<input ... />
+		<input ... />
+
+
+CONTROL CLASSES AND DIRECTIVES
+
+
+2 classes to keep track of their input fields and their validity
+
+	{FormControl} ... reps 1 input field   <--- [ngModel]
+	{FormGroup} ... reps entire form and/or groups of input fields in form <-- [ngForm]* or [ngModelGroup]
+
+	*automatically applied to all form elements
+	ngModelGroup optional directive that creates a FormGroup for that group
+
+	diff btw ngForm and ngModelGroup?
+		- ngForm exposes an output property ngSubmit
+		- ngModelGroup doesn't have that property as it doesn't make sense to submit a part of a form. 
+
+
+DISABLING THE SUBMIT BUTTON
+*****
+
+<button class="btn btn-primary" [disabled]="!f.valid">Submit</button>
+
+	- if #f (form) is not valid, we want to disable the button
+
+
+WORKING WITH CHECK BOXES
+*****
+
+<div class="checkbox">
+	<label>
+		<input type="checkbox" ngModel name="isSubscribed"> subscribe to mailing list
+	</label>
+</div>
+
+<p>
+
+{{ f.value | json }}
+
+</p>
+
+// nice diagnostic tool to see the object we have behind the form
+
+--> { "firstName: "", "comment":"", "isSubscribed": "true"}
+
+
+WORKING WITH DROP-DOWNS (ngValue)
+*****
+
+- populating a dropdown list dynamically
+
+<div class="form-group">
+
+<label for="contactMethod">contactMethod</label>
+
+<select ngModel name="contactMethod" id="contactMethod" class="form-control">
+
+	<option value=""></option>
+	<option *ngFor="let method of contatMethods" value="method.id">{{method.name}}</option>
+
+</select>
+
+</div>
+
+setting the value to actual object rather than the id: 
+- options have value attributes that can only be strings but we can bind ngValue to complext objects
+
+<option *ngFor="let method of contatMethods" [ngValue]="method">{{method.name}}</option>
+
+
+allowing users to select multiple options
+
+
+WORKING WITH RADIO BUTTONS
+*****
+
+<div class="radio">
+	<label>
+		<input ngModel type="radio" name="contactMethod" value="1">
+		Email
+	</label>
+</div>
+
+<div class="radio">
+	<label>
+		<input ngModel type="radio" name="contactMethod" value="2">
+		phone
+	</label>
+</div>
+
+rendering them dynamically: 
+
+<div *ngFor="let method of contactMethods" class="radio">
+	<label>
+		<input ngModel type="radio" name="contactMethod" [value]="method.id">
+		{{ method.name }}
+	</label>
+</div>
+
+
+
+
+
+
+
+
+
+	
+

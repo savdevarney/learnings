@@ -53,3 +53,54 @@ FORMS AND KEYBOARD EVENTS
     - component has a property (text) and a method changeText that changes text value to the value of the input field element (this.text = e.target.value)
     - TWO way databinding (hack) would be achieved by adding a value attribute with value of {{text}}
     - when we add that to the template, placeholder is immediately written in w/ value of 'Hello' (the value of the property of text in the component), and then is modified on text change
+
+NGMODEL & TWO WAY DATA BINDING
+
+    - available in FormsModule (import into ngModel)
+
+Simple example with two fields in component (name and age): 
+
+        <h1>Hello World</h1>
+        <div class="container">
+        <form>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" [(ngModel)]="name" name="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" [(ngModel)]="age" name="age" class="form-control">
+            </div>
+            <input type="submit" value="submit" class="btn btn-success">
+        </form>
+
+        <h4>Name: {{ name }}</h4>
+        <h4>Age: {{ age }}</h4>
+
+        </div>
+
+*** need to have a name attribute with the same value as what you're using in ngModel
+
+FORM SUBMISSION
+
+<form (submit)="onSubmit()">
+
+- onSubmit method adds name to array of names (a prop on component)
+- array is looped through and displayed below form
+- form is cleared after adding to array
+
+
+TEMPLATE DRIVEN FORMS & VALIDATION
+
+ngForm: allows us to group our forms together and do things like validation
+
+<form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)">
+
+- name="name" despite component property being an object of user with shape {name:''} 
+- form directive: novalidate stops standard HTML5 validation from working so we can create our own
+- if you click in and then out of something, it's considered 'touched' in angular
+
+
+
+
+

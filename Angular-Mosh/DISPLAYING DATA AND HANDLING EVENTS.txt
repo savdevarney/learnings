@@ -1,0 +1,92 @@
+DISPLAYING DATA AND HANDLING EVENTS
+
+PROPERTY BINDING
+
+<h2>{{ title }}</h2> 
+<img src="{{ imageUrl }}"/>
+<img [src]="title" />
+
+	- string interpolation works well for inserting content 
+	- property binding in most others
+	- only works one way from component to DOM
+
+ATTRIBUTE BINDING
+
+DOM vs HTML
+	- DOM is a model of objects that represents structure of document
+	- HTML is a markup language we use to represent DOM in text
+	- browser creates a tree of objects (DOM) from HTML
+	- most attributes of HTML elements have a 1:1 mapping to properties of DOM objects
+	- but there are HTML attributes that don't have representation in DOM (like colspan)
+	- also properties of DOM that don't have representation in HTML (like textContent)
+
+<td [attr.colspan]="colSpan">
+
+	- tells angular you are targetting the attribute of the HTML element
+
+CLASS BINDING
+
+	<button class="btn btn-primary" [class.active]="isActive"></button>
+
+	- bind this to field or property in our component that evaluates to something truthy
+
+STYLE BINDING
+
+	- sets properties of DOM style object
+
+	<button [style.backgroundColor]="isActive ? 'blue' : 'white'"></button>
+
+
+EVENT BINDING
+
+Events bubble up the DOM tree
+
+<button (click)="onSave"></button>
+
+onSave($event) {
+	$event.stopPropagation();
+	console.log("button was clicked", $event);
+}
+
+EVENT FILTERING
+
+<input (keyup.enter)="onKeyUp()"/>
+
+onKeyUp(){
+	console.log("ENTER was pressed")
+}
+
+
+TEMPLATE VARIABLES
+
+<input #email (keyup.enter)="onKeyUp(email.value)"/>
+
+onKeyUp(email) {
+	console.log(email);
+}
+
+TWO WAY BINDING
+
+<input [(ngModel)]="email" (keyup.enter)="onKeyUp()"/>
+
+class CoursesComponent {
+	email = "me@example.com";
+
+	onkeyUp() {
+		console.log(this.email);
+	}
+}
+
+*** out of the box, will get an error that can't bind to ngModel because it isn't a known property of 'input' ...  don't forget to add FormsModule to app's ngModule's imports array (only comes with browserModule by default)
+
+MODULE: 
+	- core
+	- forms
+	- animations
+
+
+
+PIPES
+
+	- format data
+	- built in pipes: uppercase, lowercase, decimal, currency, percent

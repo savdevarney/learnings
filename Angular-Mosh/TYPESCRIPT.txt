@@ -1,0 +1,160 @@
+TYPESCRIPT
+
+WHAT IS TYPESCRIPT
+	- superset of JavaScript
+	- additional features that don't exist in the current version of JS
+
+Concepts: 
+	- Strong typing
+	- Object-oriented features missing from JS: classes, interfaces, constructors, access modifiers, fields, properties, generics, etc.
+	- Compile-time errors
+	- Great tooling (intelligence in code editors)
+
+
+INSTALLING TYPESCRIPT
+
+$sudo npm install -g typescript
+
+tsc = typescript compiler
+
+$tsc main.ts --> transcompilation into a main.js
+
+When you run your app using $ng serve, angular CLI does this transcompilation under the hood
+
+
+TYPESCRIPT v JAVASCRIPT
+
+- variable declared with var is scoped to the nearest function
+- variable declared with let is scoped to the nearest code block
+
+TYPES
+
+let a: number;
+let b: boolean;
+let c: string;
+let d: any;
+led	e: number[] = [1,2,3];
+let f: any[]
+
+enum Color { Red, Green, Blue } --> each element is set to 0, 1, 2
+let backgroundColor = Color.Red; --> evaluates to 0
+
+TYPE ASSERTIONS
+
+let message = 'abc';
+message. --> get tool tip intelligence
+
+if we do this to initalize:
+let message; --> the type is set to any
+
+so do this ... (but doesn't change object at runtime / in memory ... just tells typescript compiler about the variable so we can access the intelligence )
+
+let message;
+message = 'abc';
+let endsWithC= (<string>message).endsWith('c');
+let alternativeWay = (message as string).endsWith('c');
+
+
+ARROW FUNCTIONS
+
+let doLog = (message) => console.log(message);
+letdoLog = () => console.log();
+
+
+INTERFACES
+
+	- using custom types in TypeScript
+	- defines the shape of an object
+
+
+interface Point {
+	x: number,
+	y: number
+}
+
+let drawPoint = (point: Point) => {
+	// ..
+}
+
+CLASSES
+
+
+class Point {
+	
+	x: number;
+	y: number;
+
+	draw() {
+		console.log('X: ' + this.x + 'Y: ' + this.y);
+	}
+
+	getDistance(another: Point) {
+		// ...
+	}
+}
+
+
+OBJECTS
+
+can't do this to initialize when dealing with a custom type:
+let point: Point;
+point.draw();
+
+
+let point: Point = new Point();
+
+or 
+
+let point = new Point(); --> TSC can infer that you're working with a type object. 
+
+
+CONSTRUCTORS
+
+method on class: 
+
+constructor (x:number, y:number) {
+	this.x = x;
+	this.y = y;
+}
+
+making them optional: 
+
+constructor (x?:number, y?:number) {
+	this.x = x;
+	this.y = y;
+}
+
+ACCESS MODIFIERS
+
+class Point {
+	private x: number;
+	private y: number;
+
+	constructor ()
+
+	public draw () {
+		//
+	}
+}
+
+* would not be able to access point.x for ex
+
+ACCESS MODIFIERS IN CONSTRUCTORS
+
+constructor (private x?: number, private y?: number) {
+
+}
+
+* when we use access modifiers in the constructor initalized variables, we don't need to include them as properties!
+
+PROPERTIES
+
+Property looks like a field from the outside, but internally it's really a method on the class - either a getter or a setter or a combination of a getter & a setter
+
+MODULES
+
+Import / Export
+
+
+
+

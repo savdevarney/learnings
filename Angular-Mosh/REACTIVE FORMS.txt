@@ -1,0 +1,97 @@
+REACTIVE FORMS
+
+Benefits
+	- more control over structure and behavior of forms
+	- easier to unittest
+
+- create control objects programmatically
+- add validation
+- implement custom validation
+- implement asynchronous validation
+- build forms that include an array of objs that are added/removed dynamically
+
+
+CREATING CONTROLS PROGRAMMATICALLY
+*****
+
+- create form control object explicitly rather than letting ngModel do it for us implicitly
+
+-----
+signup-form.component.html
+
+<form>
+	<div class="form-group">
+		<label for="username">Username</label>
+		<input
+			id="username"
+			type="text"
+			class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="password">Password</label>
+		<input
+			id="password"
+			type="text"
+			class="form-control">
+	</div>	
+
+	<button class="btn btn-primary" type="submit">Sign Up</button>
+
+</form>
+
+----
+
+signup-form.component.ts
+
+import {Component} from ''
+import { FormGroup, FormControl } from '@angular/forms'
+
+@Component({
+	selector: 'signup-form',
+	templateUrl:
+	styleUrls:
+})
+export class SignupFormComponent{
+	form = new FormGroup({
+		'username': new FormControl(),
+		'password': newFormControl()
+	})
+}
+
+
+formGroup() parameters:
+		- *controls: { [key: string]: AbstractControl }
+		- validator?: ValidatorFn, 
+		asyncValidator?: AsyncValidatorFn): FormGroup
+
+
+note on ... INHERITANCE
+
+FormControl and FormGroup inherit from AbstractControl
+
+* - for control parameter: keys should be one ore more strings and values should be AbstractControl objects.
+
+-----
+singup-form.component.html
+
+<form [formGroup]="form">
+	<div class="form-group">
+		<label for="username">Username</label>
+		<input
+			form
+			id="username"
+			type="text"
+			class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="password">Password</label>
+		<input
+			id="password"
+			type="text"
+			class="form-control">
+	</div>	
+
+	<button class="btn btn-primary" type="submit">Sign Up</button>
+
+</form>
+

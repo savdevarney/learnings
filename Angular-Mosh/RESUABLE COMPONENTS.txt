@@ -1,0 +1,407 @@
+REUSABLE COMPONENTS
+
+favorite.component.html
+
+<span class="glyphicon"
+[class.glyphicon-star]="isFavorite"
+[class.glyphicon-star-empty]="!isFavorite"
+(click)="onClick()"
+></span>
+
+COMPONENT API
+	- we use property binding to bind properties of DOM objects to fields or properties in our host componenet (componenet using that DOM object)
+	- property is also an input into the DOM object - use the syntax to provide data or some state
+	- use event binding to respond to an event raised from a DOM object
+	- but, the favorite component we built isn't very useful. 
+
+	for ex: 
+	ideally we can set the inital state of the favorite componenet using some object we have in the host componenet.
+	in the template for AppComponenet, if the post is favorite, we want to render the favorite as a full star:
+
+	<favorite [isFavorite]="post.isFavorite"></favorite>
+
+	But we can't use property binding to do that, even though we have a field in favorite called isFavorite and it's public... needs to be defined as AN INPUT PROPERTY to add support for property binding. Or say, we want to be notified whenever the user clicks on the favorite component.
+
+	<favorite [isFavorite]="post.isFavorite" (change)="onFavoriteChange()"></favorite>
+
+		- isFavorite would be an input property
+		- change would be an output property
+
+	to add support for event binding, we need to define a special property (AN OUTPUT PROPERTY)
+
+
+*** to make componenets more reusable, we want to add INPUT and OUTPUT properties. 
+
+INPUT --> adds state 
+OUTPUT --> raise events
+
+State --> input:{COMPONENT}:output --> event
+
+These make up the public API of the Component
+
+
+INPUT PROPERTIES
+
+	- implement isFavorite field of favorite componenet  as an input property so we can use it in property binding expressions
+
+	1. import Input decorator
+	2. Anotate input property w/ decorator
+
+-----
+
+app.componenet.ts
+import { Componenet } from '@angular/core';
+
+@Componenet({
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['.app.componenet.css']
+})
+export class AppComponent {
+	post = {
+		title: "title",
+		isFavorite: true
+	}
+}
+
+-----
+
+favorite.component.ts
+import { Component, OnInit, Input } from '@angular/core';
+
+@Component({
+	selector: 'favorite',
+	templateUrl: './favorite.component.html',
+	styleUrls: ['.favorite.component.css']
+})
+export class FavoriteComponenet implements OnInit {
+	@Input() isFavorite: boolean; 
+
+	constructor() {}
+
+	ngOnInit() {
+
+	}
+
+	onClick() {
+		this.isFavorite = !this.isFavorite;
+	}
+}
+
+-----
+
+app.component.html
+
+<favorite [isFavorite]="post.isFavorite" (change)="onFavoriteChange"></favorite>
+
+
+-----
+
+Instead of @input can add it in metadata (2nd approach)
+
+@Component({
+	inputs: ['isFavorite']
+})
+
+	- problem with this approach: it only works if we have a field or property in component called isFavorite (if it gets renamed, say to isSelected, it breaks)
+	- when you implement input properties with this method, angular creates a field in the component with that name under the hood. 
+
+
+ALIASING INPUT PROPERTIES
+
+say we don't want to use camelcasing in html, so we want this: 
+
+	<favorite [is-favorite']='data.isFavorite'>
+
+then, we would need to do this(because is-favorite is acceptable identifier):
+
+	@Input('is-favorite') isFavorite {}
+
+Aliasing can also help keep the contract of the API stable. 
+so, if you decide to refactor the name in favorite.component.ts (to isSelected) 
+
+	@('isFavorite') isSelected {}
+
+BUT, make sure that your favorite.componenet.html bindings reference isSelected too (in template)
+
+In summary: if you're building reusable components, give your input properties an alias to keep the contract of your components stable. 
+
+
+OUTPUT PROPERTIES
+
+
+... now we want to be notified when the user clicks on favorite componenet.  So we want the component to raise a custom event (like change) that we can bind to a method in our host component.
+
+<favorite [isFavorite]="post.isFavorite" (change)="onFavoriteChanged()"></favorite>
+
+	- change event is bound to a method in our host component
+	- called whenever our favorite component raises a change event
+	- delare an output property on favorite component with a name that's exactly the same as the event we want to raise
+	- decorate the field with an output decorator and initialize it to an instance of the event emitter class
+
+
+------
+
+app.componenet.ts
+import { Componenet } from '@angular/core';
+
+@Componenet({
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['.app.componenet.css']
+})
+export class AppComponent {
+	post = {
+		title: "title",
+		isFavorite: true
+	}
+
+	onFavoriteChanged() {
+		console.log("favorite changed");
+	}
+}
+
+-----
+
+favorite.component.ts
+
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+	selector: 'favorite',
+	templateUrl: './favorite.component.html',
+	styleUrls: ['.favorite.component.css']
+})
+export class FavoriteComponenet implements OnInit {
+	@Input() isFavorite: boolean; 
+	@Output() change = new EventEmitter();
+
+	constructor() {}
+
+	ngOnInit() {
+
+	}
+
+	onClick() {
+		this.isFavorite = !this.isFavorite;
+		this.change.emit; //notifies others that something has happened
+	}
+}
+
+-----
+
+
+PASSING EVENT DATA WHEN RAISING AN EVENT
+
+	- in app component ... onFavoriteChanged() needs data to understand what happened
+	- in favorite component ... we can optionally pass a value when emitting an event that is available to all 'subscribers' of the event
+	- in this case, the subscriber of the change event is the app componenet because that's where you're handling the event when the state of favorite changes. 
+
+-----
+
+favorite.component.ts
+
+this.change.emit(this.isSelected); 
+//new state of favorite component (a boolean)
+
+-----
+
+app.component.ts
+
+onFavoriteChanged(isFavorite) {
+	console.log("favorite changed: ", isFavorite);
+}
+
+-----
+
+app.componenet.html
+
+<favorite [isFavorite]="post.isFavorite" (change)="onFavoriteChanged($event)"></favorite>
+
+-----
+
+- $event
+- it's a built in event in Angular
+- w/ a custom componenet, it can be anything we pass when reaising an event
+- can emit an object
+- good idea to add type check and/or an interface if you're passing objs so you can get compile time errors and intelligence
+- create the interface in the favorites component.ts file and import it into the app component.ts ... 
+
+-----
+favorite.component.ts
+
+export interface FavoriteChangedEventArgs {
+	newValue: boolean
+}
+
+-----
+app.component.ts
+
+import { FavoriteChangedEventArgs } from './favorite/favorite.component.ts'
+
+onFavoriteChanged(eventArgs: FavoriteChangedEventArgs) {
+	console.log(eventArgs)
+}
+
+
+ALISASING OUTPUT PROPERTIES
+
+- can also use an alias on an output property
+- for ex, so we decide to change the name of the change event to something else (like click), the app will break. 
+- but in app.component.html (the client or consumer of the favorite component) is expecting a change event, but that doesn't exist anymore.  Our app component is expecting the event, but it's never happening. 
+
+-----
+
+favorite.component.ts
+
+@Output('change') click = new EventEmitter();
+
+
+TEMPLATES
+
+	- templateUrl:
+	- template:
+
+can not mix the 2. 
+
+CLI creation always puts it into a .html
+
+Templates are bundled along with our source code (main.bundle.js) --- no separate requests to server to download these templates. 
+
+
+STYLES
+
+	- styleUrls: <-- in component metadata.  An array w/ one or more.
+	- styles: [ `
+
+		.body {
+			background-color: pink;
+		}
+	`
+	]
+
+	... not clear why we use an array.  And you can use both.  What comes last is the one that will be effective. 
+
+	- inline in html (not good practice)
+
+	<style>
+
+	</style>
+
+
+They can override each other ...
+
+- if styleUrls comes second and it conflicts, it will completely override styles array. 
+- anything in style tags completely overrides the others. 
+
+Angular creates a scope for the styles to the component. 
+
+
+VIEW ENCAPSULATION
+*****
+
+Shadow DOM
+
+- Allows us to apply scoped styles to elements w/o bleeding out to the outer world. 
+- not supported in all browsers
+
+
+ViewEncapsulation (an enum defined in angular/core) - has three values - emulated, native, none
+
+encapsulation: ViewEncapsulation.Emulated 
+
+^ 
+- meta data in component. 
+- emulates shadow dom
+- default
+
+Angular attaches an attribute to our elements and uses to post-process our css rules
+
+encapsulation: ViewEncapsulation.Native
+
+^ 
+- 
+
+
+ngContent
+*****
+
+zen coding: 
+
+div.panel.panel-default>div.panel-heading+div.panel-body
+
+^ creates:
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+	Heading
+	</div
+</div>
+<div class="panel-body">
+Body
+</div> 
+
+goal: allow user to inject content into our html (instead of heading/body)
+
+-----
+
+app.component.html
+
+<bootstrap-panel [body]="body"></bootstrap-panel>
+
+// we don't want to have to go define a body property in app, we want to write our markup right here. 
+
+// instead:
+- add 2 injection points so consumer of panel component can provide content into those injection points. 
+
+-----
+
+panel-component.html 
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+	<ng-content select=".heading"></ng-content>
+	</div
+</div>
+<div class="panel-body">
+<ng-content select=".body"></ng-content>
+</div> 
+
+- if, in the consumer of the panel component, we have an element that matches this selector, (element w/ heading class) ... the element will replace the ng-content element.
+
+----- 
+
+app.componenet.html
+
+<bootstrap-panel>
+	<div class="heading">Heading</div>
+	<div class="body">
+		<h2>Body</h2>
+		<p>Some content here ... </p>
+	</div>
+</bootstrap-panel>
+
+
+
+ngContainer
+*****
+
+app.componenet.html
+
+<bootstrap-panel>
+	<ng-container class="heading">Heading</ng-container>
+	<div class="body">
+		<h2>Body</h2>
+		<p>Some content here ... </p>
+	</div>
+</bootstrap-panel>
+
+^ works the same way, just don't have to use a div. 
+
+
+
+
+
+
+
+
