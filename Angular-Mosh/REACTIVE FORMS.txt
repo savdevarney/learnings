@@ -53,11 +53,12 @@ import { FormGroup, FormControl } from '@angular/forms'
 })
 export class SignupFormComponent{
 	form = new FormGroup({
-		'username': new FormControl(),
-		'password': newFormControl()
+		'username': new FormControl(), 
+		'password': new FormControl()
 	})
 }
 
+/*
 
 formGroup() parameters:
 		- *controls: { [key: string]: AbstractControl }
@@ -71,14 +72,18 @@ FormControl and FormGroup inherit from AbstractControl
 
 * - for control parameter: keys should be one ore more strings and values should be AbstractControl objects.
 
+*/
+
 -----
 singup-form.component.html
 
-<form [formGroup]="form">
+// associate the form element with the actual FormGroup object we created in our component (form)
+
+<form [formGroup]="form"> 
 	<div class="form-group">
 		<label for="username">Username</label>
 		<input
-			form
+			formControlName="username" //an angular directive
 			id="username"
 			type="text"
 			class="form-control">
@@ -86,6 +91,7 @@ singup-form.component.html
 	<div class="form-group">
 		<label for="password">Password</label>
 		<input
+			formControlName="password"
 			id="password"
 			type="text"
 			class="form-control">
@@ -94,4 +100,391 @@ singup-form.component.html
 	<button class="btn btn-primary" type="submit">Sign Up</button>
 
 </form>
+
+
+* can't bind to formGroup since it isn't a known property of form
+
+^ because formGroupDirective is defined in the ReactiveFormsModule (NgModule)
+
+- in app.module.ts: add ReactiveFormsModule to inputs array and import FormsModule and ReactiveFormsModule from @angular/forms library
+
+
+ADDING VALIDATION
+*****
+
+	- assign validators when creating formControl objects (vs using html attributes in template driven)
+
+
+----
+
+signup-form.component.ts
+
+import {Component} from ''
+import { FormGroup, FormControl, Validators } from '@angular/forms'
+
+@Component({
+	selector: 'signup-form',
+	templateUrl:
+	styleUrls:
+})
+export class SignupFormComponent{
+	form = new FormGroup({
+		'username': new FormControl('', Validators.required), 
+		'password': new FormControl('', Validators.required)
+	})
+}
+
+/* constructor of FormControl class - parameters: 
+
+- formState?: any
+	initial value we set to the formControl ('')
+- validator?: ValidatorFn | ValidatorFn[]
+	- Validator.required, Validator.maxlength, Validator.minlength etc.  STATIC METHODS - don't need to instantiate a member of the class to use them
+- asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[]
+
+In angular, we have a class called Validators (from angular/forms)
+
+*/
+
+
+
+-----
+singup-form.component.html
+
+// FormGroup has a method .get to access any of the associated FormControls within it.  You can then access properties like .touched and .invalid.  
+
+
+<form [formGroup]="form"> 
+	<div class="form-group">
+		<label for="username">Username</label>
+		<input
+			formControlName="username" //an angular directive
+			id="username"
+			type="text"
+			class="form-control">
+
+		<div *ngIf="form.get('username').touched && form.get('username').invalid" class="alert alert-danger">
+		Username is required
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="password">Password</label>
+		<input
+			formControlName="password"
+			id="password"
+			type="text"
+			class="form-control">
+	</div>	
+
+	<button class="btn btn-primary" type="submit">Sign Up</button>
+
+</form>
+
+
+- simpler: 
+
+add this to component: 
+
+	get username() {
+		return this.form.get('username');
+	}
+
+and in our template: 
+
+	*ngif="username.touched && username.invalid"
+
+
+
+SPECIFIC VALIDATION ERRORS
+~~~~~
+
+adding multiple validators: 
+
+in component:
+
+	username: new FormControl('', [
+		Validators.required,
+		Validators.minLength(3)
+	])
+
+
+In template: 
+
+<div *ngIf="form.get('username').touched && form.get('username').invalid" class="alert alert-danger">
+		<div *ngIf="username.errors.required">Username is required</div>
+		<div *ngIf="username.errors.minlength">Username should be a minimum of {{ username.errors.minlength.requiredlength }}</div>
+</div>
+
+
+IMPLEMENTING CUSTOM VALIDATION
+~~~~~
+
+- ValidatorFn is an interface:
+
+interface ValidatorFn {
+	(c: AbstractControl) ValidationErrors|null
+}
+
+- represents functions with this signature - that takes AbstractControl as a parameter and returns ValidationErrors or null. 
+- can use interfaces to define the shape of function signatures as well (type and order of parameters as well as the return type)
+
+add username.validators.ts to sign-up form component folder.  However, if you're in a large application, there's a good chance that other components are going to use the same validator, then put the validators in
+
+app
+	common
+		validators
+			validator files
+
+
+
+
+
+username.validators.ts
+-----
+
+// if there's a space in the username, we want to return a validation errors object
+
+import {AbstractControl, ValidationErrors } from '@angular/forms'
+
+export class UsernameValidators {
+	static cannotContainSpace(control: AbstractControl) : ValidationErrors | null {
+		if ((control.value as string).indexOf(' ') >=0) {
+			return { cannotContainSpace: true }
+		}
+
+		return null;
+	}
+}
+
+- ValidationErrors type: 
+
+	type ValidationErrors = {
+		[key: string]: any	
+	}
+
+- another ex (min length validator)
+
+return { minLength: {
+	requiredLength: 10,
+	actualLength: control.value.length
+}}
+
+
+- in order to access method from outside without having to create an instance of UsernameValidators, we decorate with static
+- then we can use UsernameValidators.cannotContainSpace
+
+
+
+signup-form.component.ts
+------
+
+import {Component} from '@angular'
+import { FormGroup, FormControl, Validators } from '@angular/forms'
+
+@Component({
+	selector: 'signup-form',
+	templateUrl:
+	styleUrls:
+})
+export class SignupFormComponent{
+	form = new FormGroup({
+		'username': new FormControl('', [
+			Validators.required, 
+			Validators.minLength(3),
+			UsernameValidators.cannotContainSpace
+			]),
+		'password': new FormControl('', Validators.required)
+	})
+
+	get username() {
+		return this.form.get('username');
+	}
+}
+
+
+
+signup-form.component.html
+-----
+
+
+		<input
+			formControlName="username" //an angular directive
+			id="username"
+			type="text"
+			class="form-control">
+
+		<div *ngIf="username.touched && username.invalid" class="alert alert-danger">
+			<div *ngIf="username.errors.required">Username required</div>
+			<div *ngIf="username.errors.minlength">
+			At least {{ username.errors.minlength.requiredLength }} characters required
+			</div>
+			<div *ngIf="username.errors.cannotContainSpace">username cannot contain space</div>
+		</div>
+
+
+ASYNCHRONOUS OPERATIONS
+~~~~~
+
+- if we want to call server and see if username already exists
+
+username.validators.ts
+-----
+
+import {AbstractControl, ValidationErrors } from '@angular/forms'
+
+export class UsernameValidators {
+	static cannotContainSpace(control: AbstractControl) : ValidationErrors | null {
+		if ((control.value as string).indexOf(' ') >=0) {
+			return { cannotContainSpace: true }
+		}
+
+		return null;
+	}
+
+	static shouldBeUnique(control: AbstractControl) : ValidationErrors | null {
+		// simulate call to server ... wait 2 seconds
+		
+		setTimeout(() => {
+			if (control.value === 'mosh') {
+				return { shouldBeUnique: true };
+			}
+			return null;
+		}, 2000)
+	}
+}
+
+- calling the server is an Asynchronous Operation
+- when we call the server, there will be a small delay
+- process calls server behind the scene and when it's ready, executes rest
+- process doesn't block while waiting
+- other examples: AJAX, settimeout function
+
+- shouldBeUnique needs to return a value
+- our current inline function that's the call back of setTimeout isn't returning the values
+- when we're building a validator that uses asynchronous operations, we need a different function signature. 
+
+Asynchronous Validators
+~~~~~
+
+AsyncValidatorFn is the 3rd parameter of a FormControl constructor
+
+interface AsyncValidatorFn {
+	(c: AbstractControl): Promise<ValidationErrors|null>|Observable<ValidationErrors|null>}
+}
+
+return type is a Promise of ValidationErrors or Observable of ValidationErrors
+
+
+username.validators.ts
+-----
+
+import {AbstractControl, ValidationErrors } from '@angular/forms'
+
+export class UsernameValidators {
+	static cannotContainSpace(control: AbstractControl) : ValidationErrors | null {
+		if ((control.value as string).indexOf(' ') >=0) {
+			return { cannotContainSpace: true }
+		}
+
+		return null;
+	}
+
+	static shouldBeUnique(control: AbstractControl) : Promise<ValidationErrors | null {
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				if (control.value === 'mosh') {
+					resolve( { shouldBeUnique: true });
+				} else {
+					resulve(null);
+				}
+			}
+		});
+	}
+}
+
+
+Constructor of Promise class ... parameters:  
+
+executor: (resolve: (value?: T | PromiseLike<T>) => void,
+reject: (reason?: any) => void) => void
+
+- resolve is a function that takes a value and returns void
+- reason is a function that takes an optional parameter reason and returns void. 
+
+executor: (resolve, reject) => void
+
+- executor type takes two functions and returns void
+
+
+signup-form.component.ts
+-----
+
+import {Component} from '@angular'
+import { FormGroup, FormControl, Validators } from '@angular/forms'
+
+@Component({
+	selector: 'signup-form',
+	templateUrl:
+	styleUrls:
+})
+export class SignupFormComponent{
+	form = new FormGroup({
+		'username': new FormControl('', Validators.required, UsernameValidators.shouldBeUnique),
+		'password': new FormControl('', Validators.required)
+	})
+
+	get username() {
+		return this.form.get('username');
+	}
+}
+
+template
+------
+
+<div *ngIf="username.errors.shouldBeUnique">Username already taken</div>
+
+
+
+
+SHOWING A LOADER IMAGE 
+*****
+
+	- how do we know that asynch validator is in progress?
+	- we know that "username" is a property in a component that represents a form control object
+	- formControls have a property called pending which returns true if at least one asynch validator is in progress. 
+
+<div *ngIf="username.pending"> Checking for uniqueness ... </div>
+
+
+
+VALIDATING THE FORM UPON SUBMIT
+*****
+
+
+login form as ex - when we need to submit the un & pass together
+
+ngForm applied to all form elements by default that exposes an output property or event called ngSubmit which can be bound to anything, say a login method in component. 
+
+in template:
+
+<form [formGroup]="form" (ngSubmit)="login()">
+
+in component:
+
+login() {
+	let isValid = authService.login(this.form.value);
+	if (!isValid) {
+		// add validation errors to form 
+		// abstractControl has a method to set errors
+		this.form.setErrors({
+			invalidLogin: true
+		})
+	}
+}
+
+in template:
+
+<div *ngIf="form.errors" class="alert alert-danger"> The username or password is invalid</div>
+
+
 

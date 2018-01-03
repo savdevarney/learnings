@@ -1,0 +1,49 @@
+HTTP SERVICES
+
+- perform crud operations
+- extract reusable data service
+- handle diff errors
+- build apps w/ proper separation of concerns
+
+JSONPlaceHolder
+*****
+
+jsonplaceholder.typicode.com
+
+
+in component: 
+
+import { Http } from '@angular/http'
+
+export class PostsComponent {
+	posts: any[];
+
+	constructor(http: Http) {
+		http.get('http://jsonplaceholder.typicode.com/posts')
+		.subscribe(response => {
+		this.posts = response.json();
+		});
+	}
+}
+
+in app.module:
+
+imports: [
+	BrowserModule,
+	FormsModule,
+	ReactiveFormsModule,
+	HttpModule
+]
+
+
+- need to register dependencies as providers to inject them in the class
+- can just add HttpModule to import array which has it's own providers list so you don't have to list them all as providers 
+- http.get(url:string, options?:RequestOptionsArgs) : Observable<Response>
+- returns an observable
+- when the result is ready, we get notified
+- observable has method called .subscribe()
+- 3 ways to use this method
+- subscribe(next?:(value:Response) => void,
+			error?:(error:any) => void,
+			complete?: () => void): Subscription
+- won't want to use raw response obj, instead want to convert to json
