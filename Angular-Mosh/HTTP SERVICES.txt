@@ -10,10 +10,14 @@ JSONPlaceHolder
 
 jsonplaceholder.typicode.com
 
+GETTING DATA
+*****
 
-in component: 
+in posts.component.ts:
+----- 
 
 import { Http } from '@angular/http'
+import { Component }
 
 export class PostsComponent {
 	posts: any[];
@@ -27,6 +31,7 @@ export class PostsComponent {
 }
 
 in app.module:
+------
 
 imports: [
 	BrowserModule,
@@ -35,8 +40,20 @@ imports: [
 	HttpModule
 ]
 
+posts.component.html 
+-----
+
+<ul class="list-group">
+	<li
+		*ngFor="let post of posts"
+		class="list-group-item">
+		{{ post.title }}
+	</li>
+</ul>
 
 - need to register dependencies as providers to inject them in the class
+- in above ex, we're injecting http into constructor
+- if we add Http as a provider in app module, we'd also have to add all it's dependencies, so .... 
 - can just add HttpModule to import array which has it's own providers list so you don't have to list them all as providers 
 - http.get(url:string, options?:RequestOptionsArgs) : Observable<Response>
 - returns an observable
@@ -46,4 +63,422 @@ imports: [
 - subscribe(next?:(value:Response) => void,
 			error?:(error:any) => void,
 			complete?: () => void): Subscription
-- won't want to use raw response obj, instead want to convert to json
+- response object has properties status(200) and statusText("OK")
+- most of the time we won't want to use raw response obj, instead want to convert to json
+- response object has a method .json to convert to a json object
+- response.json() will return an array of posts
+
+
+CREATING DATA 
+*****
+
+- text field to create post 
+
+posts.component.html
+-----
+
+<input 
+(keyup.enter)="createPost(title)" #title 
+type="text" class-"form-control">
+
+<ul class="list-group">
+	<li
+		*ngFor="let post of posts"
+		class="list-group-item">
+		{{ post.title }}
+	</li>
+</ul>
+
+posts.component.ts
+-----
+- add method
+- title is an html input element, so add that in ts
+- add a private keyword decorator to http so it's available as a field in the class.
+- add a private field for url (it's about the implementation of the class - so doesn't need to be visible from outside)
+
+import { Http } from '@angular/http'
+import { Component }
+
+export class PostsComponent {
+	posts: any[];
+	private url = 'http://jsonplaceholder.typicode.com/posts'
+
+	constructor(private http: Http) {
+		http.get(this.url)
+		.subscribe(response => {
+		this.posts = response.json();
+		});
+	}
+}
+createPost(input: HTMLInputElement) {
+	let post = { title: input.value };
+	input.value = '';
+	this.http.post(this.url, JSON.stringify(post))
+		.subscribe(response => {
+			post['id'] = response.json().id; // alt to sq bracket notation: can set post type to any
+			this.post.splice(0, 0, post);
+			console.log(response.json());
+		})
+}
+
+- when calling http services for creating data, the body should be a json object that we want to send to the server. 
+- JSON.stringify is a native object/method in JS
+- post method signature: post(url:string, body:any, options?:RequestOptionsArgs):Observable<Response>
+- in a real world application, when we send a post request to a server, the server should respond with a complete representation of the newly created object on the server
+- can use this.posts.push but that would add the new post to the end. 
+- so as an alternative, use the splice method. splice(start, #to delete, obj to insert)
+
+HTTP requests:
+- GET: get data
+- POST: create data
+- PUT: Update data
+- DELETE: Delete data
+
+
+UPDATING DATA
+*****
+
+posts.component.html
+-----
+- add a button to update data 
+
+<input 
+(keyup.enter)="createPost(title)" #title 
+type="text" class-"form-control">
+
+<ul class="list-group">
+	<li
+		*ngFor="let post of posts"
+		class="list-group-item">
+		<button
+			(click)="updatePost(post)"
+			class="btn btn-default btn-sm">
+		</button>
+		{{ post.title }}
+	</li>
+</ul>
+
+posts.component.ts
+-----
+
+import { Http } from '@angular/http'
+import { Component }
+
+export class PostsComponent {
+	posts: any[];
+	private url = 'http://jsonplaceholder.typicode.com/posts'
+
+	constructor(private http: Http) {
+		http.get(this.url)
+		.subscribe(response => {
+		this.posts = response.json();
+		});
+	}
+}
+createPost(input: HTMLInputElement) {
+	let post = { title: input.value };
+	input.value = '';
+	this.http.post(this.url, JSON.stringify(post))
+		.subscribe(response => {
+			post['id'] = response.json().id; // alt to sq bracket notation: can set post type to any
+			this.post.splice(0, 0, post);
+			console.log(response.json());
+		})
+
+updatePost(post) {
+	this.http.patch(this.url + '/' + post.id, JSON.stringify({ isRed: true }))
+		.subscribe(response => {
+			console.log(response.json());
+		})
+}
+}
+
+
+- patch vs put: patch is just used for a few updates to the object
+- this.http.patch(this.url, JSON.stringify({ isRed: true })) --- not widely supported
+- this.http.put(this.url, JSON.stringify(post)))
+
+DELETING DATA
+*****
+
+posts.component.html
+-----
+- add a button to delete data 
+
+<input 
+(keyup.enter)="createPost(title)" #title 
+type="text" class-"form-control">
+
+<ul class="list-group">
+	<li
+		*ngFor="let post of posts"
+		class="list-group-item">
+		<button
+			(click)="deletePost(post)"
+			class="btn btn-default btn-sm">
+		</button>
+		{{ post.title }}
+	</li>
+</ul>
+
+
+posts.component.ts
+-----
+
+import { Http } from '@angular/http'
+import { Component }
+
+export class PostsComponent {
+	posts: any[];
+	private url = 'http://jsonplaceholder.typicode.com/posts'
+
+	constructor(private http: Http) {
+		http.get(this.url)
+		.subscribe(response => {
+		this.posts = response.json();
+		});
+	}
+}
+createPost(input: HTMLInputElement) {
+	let post = { title: input.value };
+	input.value = '';
+	this.http.post(this.url, JSON.stringify(post))
+		.subscribe(response => {
+			post['id'] = response.json().id; // alt to sq bracket notation: can set post type to any
+			this.post.splice(0, 0, post);
+			console.log(response.json());
+		})
+
+updatePost(post) {
+	this.http.patch(this.url + '/' + post.id, JSON.stringify({ isRed: true }))
+		.subscribe(response => {
+			console.log(response.json());
+		})
+	}
+
+deletePost(post) {
+	this.http.delete(this.url + '/' + post.id)
+	.subscribe(response => {
+		let index = this.posts.indexOf(post);
+		this.posts.splice(index, 1);
+	})
+	}
+}
+
+- http delete requests don't have a body. 
+
+OnInit INTERFACE
+*****
+
+- in the previous implementation, we make an http request in the constructor
+- as a best practice, constructors should be small and light weight
+- components in angular have lifecycle hooks (special methods we can add that angular will automatically call)
+- Example lifecycle hooks: 1. creating a component 2. rendering a component 3. creating and rendering children 4. destroying a component
+
+posts.component.ts
+-----
+
+import { Http } from '@angular/http'
+import { Component }
+
+export class PostsComponent implements OnInit {
+	posts: any[];
+	private url = 'http://jsonplaceholder.typicode.com/posts'
+
+	constructor(private http: Http) {
+
+	}
+
+	ngOnInit() {
+		http.get(this.url)
+			.subscribe(response => {
+			this.posts = response.json();
+			});
+	}
+}
+
+
+-----
+OnInit Interface: 
+	interface OnInit {
+		ngOnInit(): void
+	}
+
+- adding "implements OnInit" tells TS compiler that this class should conform with the structore of the OnInit interface (should contain a method called OnInit)
+- other lifecycle hooks: OnInit, OnChanges, DoCheck, AfterContentInit, 
+- technically don't have to have 'implemets OnInit' - just need the method called ngOnInit defined in class. 
+
+SEPARATION OF CONCERNS 
+*****
+
+- previous implementations violates separation of concerns
+- classes should have a single responsibility (easier to maintain and easier to test)
+- presentation logic vs getting data
+- likely we'll work with posts on other pages and we'll want to know the post endpoint url, etc so we only have to update it once. 
+
+COMPONENT --> SERVICE --> BACKEND
+
+unit testing: 
+
+COMPONENT --> FAKE-SERVICE
+
+EXTRACTING A SERVICE
+*****
+
+- create a new service w angular cli 
+- ng g s post
+- creates post.service.spec.ts and post.service.ts in app folder and generates a warning: Service is generated but not provided
+- when we use it for dependency injection, we'll get error: no provider
+- in app.module in providers array add PostService
+- will probably want to create a folder called services and create all services there. 
+
+posts.component.ts
+-----
+import { PostService } from './../services/post.service';
+import { Component, OnInit } from '@angular/core';
+
+export class PostsComponent implements OnInit {
+	posts: any[];
+
+	constructor(private service: PostService ) {
+
+	}
+
+	ngOnInit() {
+		this.service.getPosts()
+			.subscribe(response => {
+			this.posts = response.json();
+			});
+	}
+
+	createPost(input: HTMLInputElement) {
+		let post = { title: input.value };
+		input.value = '';
+		this.service.createPost(post)
+			.subscribe(response => {
+				post['id'] = response.json().id; // alt to sq bracket notation: can set post type to any
+				this.post.splice(0, 0, post);
+				console.log(response.json());
+			})
+
+	updatePost(post) {
+		this.service.updatePost(post)
+			.subscribe(response => {
+				console.log(response.json());
+			})
+	}
+
+	deletePost(post) {
+		this.service.deletePost(post.id)
+		.subscribe(response => {
+			let index = this.posts.indexOf(post);
+			this.posts.splice(index, 1);
+		})
+	}
+}
+
+post.service.ts
+-----
+import { Http } from '@angular/http';
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class PostService {
+	private url = 'http://jsonplaceholder.typicode.com/posts'
+	constructor(private http: Http) {
+
+	}
+
+	getPosts() {
+		return this.http.get(this.url);
+	}
+
+	createPost(post) {
+		return this.http.post(this.url, JSON.stringify(post))
+	}
+
+	updatePost(post) {
+		return this.http.patch(this.url + '/' + post.id, JSON.stringify({ isRed: true }))
+	}
+
+	deletePost(id) {
+		return this.http.delete(this.url + '/' + id)
+	}
+}
+
+- in components, we should NOT inject the http class... this is a separate concern
+- instead, we should work with our services
+- get method returns an observable of response and we want to return this to the consumer of our service (the component)
+- will get compiling failure: Module build failed: ENOENT: no such file or directory
+- we moved the service to another folder and forgot to update import statement in app.module
+- import { PostService } from './services/post.service';
+
+
+HANDLING ERRORS 
+*****
+
+- have assumed that the call to the server always succeeds, but not the case 
+- handle errors and let user know in the UI
+- ERRORS can be 
+	- unexpected (server is offline, network is down, unhandled exceptions) 
+	- expected ("not Found" errors (404) and "bad request" errors (400))
+		- 404 ex - if user deletes post but it's still visible to another user who also wants to delete. 
+		- 400 ex - if a user tries and signs up with a username that already exists.
+
+HANDLING UNEXPECTED ERRORS
+*****
+
+- subscribe method has an optional parameter
+- subscribe signature: 
+	subscribe(next?:(value:Response)=>void, error?(error:any) => void, complete?:()=> void) : Subscription
+
+- error parameter is a function that takes an error object and returns void
+
+
+posts.component.ts
+-----
+import { PostService } from './../services/post.service';
+import { Component, OnInit } from '@angular/core';
+
+export class PostsComponent implements OnInit {
+	posts: any[];
+
+	constructor(private service: PostService ) {
+
+	}
+
+	ngOnInit() {
+		this.service.getPosts()
+			.subscribe(response => {
+			this.posts = response.json();
+			}, error => {
+				alert('An unexpected error occured.');
+			});
+	}
+
+	createPost(input: HTMLInputElement) {
+		let post = { title: input.value };
+		input.value = '';
+		this.service.createPost(post)
+			.subscribe(response => {
+				post['id'] = response.json().id; // alt to sq bracket notation: can set post type to any
+				this.post.splice(0, 0, post);
+				console.log(response.json());
+			})
+
+	updatePost(post) {
+		this.service.updatePost(post)
+			.subscribe(response => {
+				console.log(response.json());
+			})
+	}
+
+	deletePost(post) {
+		this.service.deletePost(post.id)
+		.subscribe(response => {
+			let index = this.posts.indexOf(post);
+			this.posts.splice(index, 1);
+		})
+	}
+}
+
