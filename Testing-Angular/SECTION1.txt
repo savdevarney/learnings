@@ -1,0 +1,114 @@
+SECTION 1
+
+LESSON 1: What is automated testing
+- release software of better quality
+
+LESSON 2: Types of Tests
+
+1. Unit Tests
+2. Integration Tests
+3. End to End Tests
+
+For Angular, that means testing JUST the component, not the template
+If it depends on a service or router, we create a FakeService or a FakeRouter
+
+
+export class VoteComponent {
+    totalVotes: number;
+    upVote() {
+        this.totalVotes++;
+    }
+}
+
+{{ totalVotes }}
+<button (click)="upVote()">Up</button>
+
+- we don't care about the template, just the component (although some people consider this a unit test still)
+- call the method in the test and expect it to increase the totalVotes
+- if there's a problem with bindings in template, we won't know until runtime - something we'd discover in integration testing
+
+
+LESSON 4: Fundamentals of Unit Testing
+
+- tests are first-class citizens
+- small functions / methods (10 lines of code or less)
+- proper naming
+- single responsibility
+
+
+COMPUTE.ts
+export function compute(number) {
+    if (number < 0)
+        return 0;
+    return number + 1;
+}
+
+COMPUTE.spec.ts
+
+import { compute }
+
+describe('compute', () => {
+    it('should retun 0 if input is negative', () => {
+        const result = compute(-1);
+        expect(result).toBe(0);
+    });
+    it('should increment the input if it is positive', () => {
+        const result = compute(1);
+        expect(result).toBe(2);
+    })
+});
+
+LESSON 5: working with strings and arrays
+
+export function greet(name) {
+    return 'Welcome ' + name;
+}
+
+describe('greet', () => {
+    it('should include the name in the message', () => {
+        expect(greet('mosh').toBe('Welcome mosh'); <-- too fragile! What if we want to add an exclamation point in the future?
+        expect(greet('mosh')).toContain('mosh'); 
+    })
+});
+
+export function getCurrencies() {
+    return ['USD', 'AUD', 'EUR'];
+}
+
+-- don't care about exact position, just need to contain them
+
+describe ('getCurrencies', () => {
+    it('should return the supported currencies'), () => {
+        const result = getCurrencies();
+        expect(result).toContain('USD');
+        expect(result).toContain('AUD');
+        expect(result).toContain('EUR');
+    }
+});
+
+LESSON 6: Setup and tear down
+
+Pattern: state change
+
+AAA: Arrange, Act, Assert
+
+- initialization can be done once, don't need to duplicate in each test. 
+- however running one test will likely impact the state of the component and other tests may fail.
+- beforeEach is called by the test runner before each test is initilized
+
+- beforeEach() --> setup
+- afterEach() --> teardown
+- beforeAll()
+- afterAll()
+
+LESSON 7: Forms
+
+Pattern: creating a form group w 2 form controls - expected by template
+
+need to assert: 
+1. when creating the component, there will be a form group with two form controls and they should be called 'name' and 'email'.
+2. name field is required
+
+LESSON 8: Working with event-emitters
+
+LESSON 9: Working with spies

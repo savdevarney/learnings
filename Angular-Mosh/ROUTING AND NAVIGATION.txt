@@ -1,0 +1,399 @@
+ROUTING AND NAVIGATION
+*****
+
+- how routing works in angular
+- add navigation to angular apps
+- configuring routes
+- implementing single pages apps
+
+
+ROUTING IN A NUTSHELL
+*****
+
+MODULES
+- Forms
+- ReactiveForms
+- Http
+- Router 
+
+Router includes directives and services we can use to implement routing in our applications. 
+
+STEPS to implement navigation.
+1.  configure the routes (determines what component should be visible at a given URL. mapping of a path to a component)
+2.  add a router outlet (display the corresponding component when route becomes active)
+3.  add links
+
+CONFIGURING ROUTES
+*****
+
+/followers
+/profile/username/user-id?foo=bar
+/posts
+
+in app.module - configure routes
+- dl zip file
+- $ npm install
+- $ ng serve
+
+in app.moduel: 
+-----
+- forRoot() is a static method defined in ROuterModule class used to define the root routes for our app
+- When app grows and we want to break the app in separate modules, we'll use .forChild()
+- empty path represents homepage ( don't use a /)
+- :username is a parameter that will get populated
+- ** wildcard ... make sure you put it at the end!
+- put the more specific routes on the top
+
+import { RouterModule } from '@angular/router';
+
+imports: [
+    RouterModule.forRoot([
+        { 
+            path: '',
+            component: HomeComponent 
+        },
+        { 
+            path: 'followers/:username', 
+            component: GithubProfileComponent 
+        },
+        { 
+            path: 'followers', 
+            component: GithubFollowersComponent 
+        },
+
+        {
+            path: 'posts',
+            component: PostsComponent
+        },
+        {
+            path: '**',
+            component: NotFoundComponent
+        }
+    ])
+]
+
+
+ROUTER OUTLET
+*****
+
+- second step is to add a router outlet (where angular router displays component associated with home route. )
+
+app.component.html
+*****
+
+<navbar></navbar>
+<router-outlet></router-outlet>
+
+^ directive defined in router module.  When angular sees it, it will render the component associated with the current route after this router-outlet (not inside the element)
+
+
+ROUTER LINK
+*****
+
+- in Angular apps, we don't use the href attribute in <a> elements. 
+- the page flickers as if it's reloaded
+- entire page is downloaded and the angular app is reinitialized
+- in network tab - you can see all the resources (.js bundles etc) are redownloaded every time you click on a link. 
+- want only the content for the new page to be downloaded. 
+- use a directive called <a routerLink="/posts">
+- SINGLE PAGE APPLICATIONS (SPAS)
+- single page is downloaded and as the user navigates, only the content of the target page is downloaded. 
+
+For simple routes: 
+<a routerLink="/followers">
+- attribute and set it to a string
+
+For dynamic routes: 
+<a [routerLink]="['/followers', follower.id]">{{ follower.login }}</a>
+- property binding and set value to an array
+- first element in array is the path and subsequent ones are route arguments. 
+
+ROUTER LINK ACTIVE
+*****
+
+navgar.component.html
+ 
+- active class (part of bootstrap)
+- but we want to apply this dynamically
+- routerLinkActive takes a string with the space separated set of css classes to apply
+
+<li routerLinkActive="active current"><a routerLink="followers">followers</a></li>
+
+GETTING THE ROUTE PARAMETERS
+*****
+
+- in app module we've defined a route that takes a parameter: username
+- how can we extract this on our github profile component? 
+- inject the activated route class in the parameter
+
+github-profile.component.ts
+*****
+
+import { ActivatedRoute } from '@angular/router/src/router_state';
+
+^ service defined in angular/route library and is part of the Router module we imported
+
+add this as a parameter in constructor: 
+    private route: ActivatedRoute
+
+
+in ngOnInit() {
+    this.route.paramMap
+        .subscribe(params => {
+            console.log(params);
+        });
+}
+
+- paramMap is an observable of type paramMap
+- paramsAsMap obj: 
+
+{
+    keys: ["username"],
+    params: {username: 10586972}
+}
+
+methods youc an use with a ParamMap object: 
+.get --> get the value of a single route paramater
+.getAll --> get all the values of all paramaters
+.has --> do we have a parameter with the given name in the obj? 
+keys (property) --> returns all the keys or all the route paramaters
+
+
+github-profile.component.ts
+------
+
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-github-profile',
+  templateUrl: './github-profile.component.html',
+  styleUrls: ['./github-profile.component.css']
+})
+export class GithubProfileComponent implements OnInit {
+
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.paramMap
+      .subscribe((params => {
+        let id = +params.get('id');
+      }))
+  }
+
+}
+
+*** JS tip: 
+param.get will return a string
+to return an int use +params.get('id');
+
+- why is parammap defined as an observable? 
+- why can't we just use this.route.paramMap['id']
+... will be ansered 
+
+WHY ROUTE PARAMETERS ARE OBSERVABLES
+*****
+
+- what happens to components during navigation. 
+
+Component A --> Component B in navigation
+- Angular will destroy component A, remove it from DOM
+- then create and initialize component B and render it in a DOM
+
+livecycle hooks: 
+    - OnInit
+    - OnDestroy 
+    ....
+
+But image a link on Component A allows user to navigate away but also get to the same page. 
+Say your building a banking application: 
+
+Transaction ID
+<--previous next -->
+
+- angular won't want to destroy the component just to recreate it. 
+- Same component instance with different route Parameters
+- why route parameters are defined as observables
+
+OBSERVABLE
+- collection of asynchronous data that arrives over time
+- can use observables to model streams of asynchronous data
+- data comes into the stream and anyone who is subscribted will be notified. 
+- githubprofilecomponent is an observer of the observable paramMap
+- think about it like being  on a mailing list.  Anytime there's a new post, you receive an update. 
+- subscribing to the ParamMap which is a collection of route paramaters that can change over time and every time there's a new one, we're notified. 
+
+to see this in action: 
+
+ngOnInit() {
+    console.log("GitHubProfile OnInit");
+}
+
+- every time we go to the followerspage after clicking on a user, the githubprofile component is reinitialized. 
+- but we now want the component to stay in the DOM and allow the route parameters to change. 
+
+add this to the .html of the gihub-profile page: 
+<button [routerLink]="['/followers', 1234]" class="btn btn-primary">Next</button>
+
+- route parameter changes but nothing is re-initialized!
+
+- if you have an app w that type of navigation, in order to get access to the router parameters as they change you need to subscribe to the observable.  
+
+- if you don't allow the user to stay on the same page and navigate back and forth, there's a simpler way
+- if they user HAS to navigate away go somewhere else and come back, can use a snapshot instead of an observable. 
+
+this.route.snapshot.paramMap.get('id);
+^ paramMap obj and NOT the observable. 
+
+ex: followerslist --> follower --> back to followerslist --> follower
+
+ROUTES WITH MULTIPLE PARAMETERS
+*****
+
+- maybe we want to add the username of each follower in the url for second
+
+/follower/userid/username
+
+- modify route in app.module to include username. 
+- then modify the link: in followers.html is where we render the link for each follower. 
+
+<a [routerLink]="['/followers', follower.id, follower.login]">{{ follower.login }}</a>
+
+QUERY PARAMETERS
+*****
+
+- when we want to include optional parameters in routes
+- ex: /follower?page=1&order=newest
+
+- in navbar.component.html is where we render the link to the followers page. 
+- routerLink directive exports a property we can use in our property binding expression
+- routerLink="/followers" [queryParams]="{page: 1, order: 'newest'"}
+- ^ these can be dynamic and not hard coded of course. 
+
+        <li routerLinkActive="active current"><a routerLink="/followers" [queryParams]="{page: 1, order: 'newest'"}>Followers</a></li>
+
+- this successfully sends the parameters, but what about receiving them? 
+- in the github-followers component need to inject the activatedroute service. 
+
+- but, how can we get both the required and optional query parameters and then call the server? 
+
+github-followers.component.ts
+-----
+import { GithubFollowersService } from './../services/github-followers.service';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'github-followers',
+  templateUrl: './github-followers.component.html',
+  styleUrls: ['./github-followers.component.css']
+})
+export class GithubFollowersComponent implements OnInit {
+  followers: any[];
+
+  constructor(
+    private route: ActivatedRoute,
+    private service: GithubFollowersService) {}
+
+  ngOnInit() {
+    this.route.paramMap
+      .subscribe(params => {
+
+      });
+    // let id = this.route.snapshot.paramMap.get('id');
+
+    this.route.queryParamMap
+      .subscribe(
+        params => {
+          
+        }
+      );
+    // let page = this.route.snapshot.queryParamMap.get('page');
+
+    this.service.getAll()
+      .subscribe(followers => this.followers = followers);
+  }
+}
+
+SUBSCRIBING TO MULTIPLE OBSERVABLES
+******
+
+OBSERVABLE
+- stream of asynchronous data that arrives over time
+- combine two observables into one and then subscribe to that. 
+
+in github-followers.component
+-----
+
+- import observable 
+- also import a factory method that will allow you to combine observables: 
+ 
+import 'rxjs/add/observable/combineLatest';
+
+- static method on the Observable class to create a new observable we can subscribe to. 
+
+github-followers.component.ts
+*****
+
+import { GithubFollowersService } from './../services/github-followers.service';
+import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+
+@Component({
+  selector: 'github-followers',
+  templateUrl: './github-followers.component.html',
+  styleUrls: ['./github-followers.component.css']
+})
+export class GithubFollowersComponent implements OnInit {
+  followers: any[];
+
+  constructor(
+    private route: ActivatedRoute,
+    private service: GithubFollowersService) {}
+
+  ngOnInit() {
+    Observable.combineLatest([
+      this.route.paramMap,
+      this.route.queryParamMap
+    ])
+    .subscribe(combined => {
+        let id = combined[0].get('id');
+        let page = combined[1].get('page');
+
+        // this.service.getAll({ id: id, page: page})
+
+        // use the data to get the data from the service. 
+        this.service.getAll()
+          .subscribe(followers => this.followers = followers);
+    });
+
+  }
+}
+
+
+- cleaner way to write this that doesn't have a subscribe within a subscribe 
+
+
+THE SWITCHMAP OPERATOR
+*****
+
+- getAll() method in Data.service uses this.http.get which returns an Observable of type response
+- Observable<Response>
+- Think of Observables like a collection so Observable<any> is a collection of any items
+
+
+Observable: Response (every item in collection is an instance of response class)
+
+apply the map operator ----> 
+
+[Response] --> map --> [Any]
+
+
+Observable<ParamMap[]>
+
+We're subscribing to an observable and every item in collection is of type ParamMap[]
+Can map ParamMap array and get a followers[]
+
+
+
